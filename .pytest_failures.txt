@@ -1,0 +1,340 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/nikhil-v/pl/hushh
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.14.2, cov-7.1.0, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 60 items
+
+tests/e2e/test_http_tunnel.py FFF                                        [  5%]
+tests/integration/test_auth.py ........                                  [ 18%]
+tests/integration/test_reconnect.py F.                                   [ 21%]
+tests/integration/test_tunnel_flow.py ..F.FFF                            [ 33%]
+tests/unit/test_protocol.py ...................                          [ 65%]
+tests/unit/test_subdomain.py ............                                [ 85%]
+tests/unit/test_tunnel_manager.py ....F....                              [100%]
+
+=================================== FAILURES ===================================
+______________ TestE2EHttpTunnel.test_full_request_response_cycle ______________
+.venv/lib/python3.12/site-packages/starlette/datastructures.py:683: in __getattr__
+    return self._state[key]
+           ^^^^^^^^^^^^^^^^
+E   KeyError: 'tunnel_manager'
+
+During handling of the above exception, another exception occurred:
+tests/e2e/test_http_tunnel.py:67: in test_full_request_response_cycle
+    manager: TunnelManager = app.state.tunnel_manager
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/datastructures.py:686: in __getattr__
+    raise AttributeError(message.format(self.__class__.__name__, key))
+E   AttributeError: 'State' object has no attribute 'tunnel_manager'
+____________ TestE2EHttpTunnel.test_tunnel_returns_502_when_offline ____________
+tests/e2e/test_http_tunnel.py:119: in test_tunnel_returns_502_when_offline
+    assert resp.status_code == 502
+E   assert 404 == 502
+E    +  where 404 = <Response [404 Not Found]>.status_code
+__________________ TestE2EHttpTunnel.test_large_response_body __________________
+.venv/lib/python3.12/site-packages/starlette/datastructures.py:683: in __getattr__
+    return self._state[key]
+           ^^^^^^^^^^^^^^^^
+E   KeyError: 'tunnel_manager'
+
+During handling of the above exception, another exception occurred:
+tests/e2e/test_http_tunnel.py:126: in test_large_response_body
+    manager: TunnelManager = app.state.tunnel_manager
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/datastructures.py:686: in __getattr__
+    raise AttributeError(message.format(self.__class__.__name__, key))
+E   AttributeError: 'State' object has no attribute 'tunnel_manager'
+_______________ TestReconnectLogic.test_stops_after_max_retries ________________
+tests/integration/test_reconnect.py:40: in test_stops_after_max_retries
+    with pytest.raises((asyncio.TimeoutError, OSError, Exception)):
+E   Failed: DID NOT RAISE any of (TimeoutError, OSError, Exception)
+----------------------------- Captured stdout call -----------------------------
+2026-07-28 22:59:26 [info     ] tunnel.connecting              url=ws://localhost:9999/tunnel/ws
+2026-07-28 22:59:26 [error    ] tunnel.connect_error           error="[Errno 111] Connect call failed ('127.0.0.1', 9999)"
+2026-07-28 22:59:26 [info     ] tunnel.reconnecting            attempt=1 backoff_seconds=1.0
+2026-07-28 22:59:27 [info     ] tunnel.connecting              url=ws://localhost:9999/tunnel/ws
+2026-07-28 22:59:27 [error    ] tunnel.connect_error           error="[Errno 111] Connect call failed ('127.0.0.1', 9999)"
+2026-07-28 22:59:27 [error    ] tunnel.max_retries_exceeded    attempt=2
+________________ TestTunnelAPI.test_list_tunnels_authenticated _________________
+.venv/lib/python3.12/site-packages/starlette/datastructures.py:683: in __getattr__
+    return self._state[key]
+           ^^^^^^^^^^^^^^^^
+E   KeyError: 'tunnel_manager'
+
+The above exception was the direct cause of the following exception:
+tests/integration/test_tunnel_flow.py:42: in test_list_tunnels_authenticated
+    resp = await http_client.get(
+.venv/lib/python3.12/site-packages/httpx/_client.py:1768: in get
+    return await self.request(
+.venv/lib/python3.12/site-packages/httpx/_client.py:1540: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:1629: in send
+    response = await self._send_handling_auth(
+.venv/lib/python3.12/site-packages/httpx/_client.py:1657: in _send_handling_auth
+    response = await self._send_handling_redirects(
+.venv/lib/python3.12/site-packages/httpx/_client.py:1694: in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:1730: in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_transports/asgi.py:170: in handle_async_request
+    await self.app(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/applications.py:1163: in __call__
+    await super().__call__(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/applications.py:90: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+.venv/lib/python3.12/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:193: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+server/main.py:224: in dispatch
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:168: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:144: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:193: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+server/core/middleware.py:95: in dispatch
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:168: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:144: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv/lib/python3.12/site-packages/starlette/middleware/cors.py:88: in __call__
+    await self.app(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/routing.py:660: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:2689: in app
+    await route.handle(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:1770: in handle
+    await self.original_router.handle(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:2744: in handle
+    await included_router._handle_selected(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:1790: in _handle_selected
+    await original_route.handle(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:1270: in handle
+    await app(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:156: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:142: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/fastapi/routing.py:698: in app
+    raw_response = await run_endpoint_function(
+.venv/lib/python3.12/site-packages/fastapi/routing.py:350: in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+server/api/tunnels.py:68: in list_tunnels
+    manager: TunnelManager = _get_manager(request)
+                             ^^^^^^^^^^^^^^^^^^^^^
+server/api/tunnels.py:50: in _get_manager
+    return request.app.state.tunnel_manager  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/datastructures.py:686: in __getattr__
+    raise AttributeError(message.format(self.__class__.__name__, key))
+E   AttributeError: 'State' object has no attribute 'tunnel_manager'
+---------------------------- Captured stdout setup -----------------------------
+2026-07-28 22:59:30 [info     ] auth.login                     email=admin@test.com user_id=1
+____________________ TestTunnelAPI.test_get_unknown_tunnel _____________________
+.venv/lib/python3.12/site-packages/starlette/datastructures.py:683: in __getattr__
+    return self._state[key]
+           ^^^^^^^^^^^^^^^^
+E   KeyError: 'tunnel_manager'
+
+The above exception was the direct cause of the following exception:
+tests/integration/test_tunnel_flow.py:58: in test_get_unknown_tunnel
+    resp = await http_client.get(
+.venv/lib/python3.12/site-packages/httpx/_client.py:1768: in get
+    return await self.request(
+.venv/lib/python3.12/site-packages/httpx/_client.py:1540: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:1629: in send
+    response = await self._send_handling_auth(
+.venv/lib/python3.12/site-packages/httpx/_client.py:1657: in _send_handling_auth
+    response = await self._send_handling_redirects(
+.venv/lib/python3.12/site-packages/httpx/_client.py:1694: in _send_handling_redirects
+    response = await self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_client.py:1730: in _send_single_request
+    response = await transport.handle_async_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/httpx/_transports/asgi.py:170: in handle_async_request
+    await self.app(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/applications.py:1163: in __call__
+    await super().__call__(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/applications.py:90: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/middleware/errors.py:186: in __call__
+    raise exc
+.venv/lib/python3.12/site-packages/starlette/middleware/errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:193: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+server/main.py:224: in dispatch
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:168: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:144: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:193: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+server/core/middleware.py:95: in dispatch
+    return await call_next(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:168: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+.venv/lib/python3.12/site-packages/starlette/middleware/base.py:144: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+.venv/lib/python3.12/site-packages/starlette/middleware/cors.py:88: in __call__
+    await self.app(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/middleware/exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/routing.py:660: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:2689: in app
+    await route.handle(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:1770: in handle
+    await self.original_router.handle(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:2744: in handle
+    await included_router._handle_selected(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:1790: in _handle_selected
+    await original_route.handle(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:1270: in handle
+    await app(scope, receive, send)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:156: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv/lib/python3.12/site-packages/starlette/_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv/lib/python3.12/site-packages/fastapi/routing.py:142: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/fastapi/routing.py:698: in app
+    raw_response = await run_endpoint_function(
+.venv/lib/python3.12/site-packages/fastapi/routing.py:350: in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+server/api/tunnels.py:93: in get_tunnel
+    manager: TunnelManager = _get_manager(request)
+                             ^^^^^^^^^^^^^^^^^^^^^
+server/api/tunnels.py:50: in _get_manager
+    return request.app.state.tunnel_manager  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/datastructures.py:686: in __getattr__
+    raise AttributeError(message.format(self.__class__.__name__, key))
+E   AttributeError: 'State' object has no attribute 'tunnel_manager'
+---------------------------- Captured stdout setup -----------------------------
+2026-07-28 22:59:34 [info     ] auth.login                     email=admin@test.com user_id=1
+_______________ TestProxyFlow.test_tunnel_not_found_returns_502 ________________
+tests/integration/test_tunnel_flow.py:77: in test_tunnel_not_found_returns_502
+    assert resp.status_code == 502
+E   assert 404 == 502
+E    +  where 404 = <Response [404 Not Found]>.status_code
+__________________ TestProxyFlow.test_proxy_resolves_response __________________
+.venv/lib/python3.12/site-packages/starlette/datastructures.py:683: in __getattr__
+    return self._state[key]
+           ^^^^^^^^^^^^^^^^
+E   KeyError: 'tunnel_manager'
+
+During handling of the above exception, another exception occurred:
+tests/integration/test_tunnel_flow.py:84: in test_proxy_resolves_response
+    manager: TunnelManager = app.state.tunnel_manager
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/starlette/datastructures.py:686: in __getattr__
+    raise AttributeError(message.format(self.__class__.__name__, key))
+E   AttributeError: 'State' object has no attribute 'tunnel_manager'
+---------------------------- Captured stdout setup -----------------------------
+2026-07-28 22:59:37 [info     ] auth.login                     email=admin@test.com user_id=1
+_____________ TestTunnelManagerRegistration.test_invalid_subdomain _____________
+tests/unit/test_tunnel_manager.py:130: in test_invalid_subdomain
+    with pytest.raises(ValueError):
+E   Failed: DID NOT RAISE ValueError
+----------------------------- Captured stdout call -----------------------------
+2026-07-28 22:59:38 [info     ] tunnel_manager.started
+2026-07-28 22:59:38 [info     ] tunnel.registered              local_port=3000 subdomain=uppercase user_id=1
+2026-07-28 22:59:38 [info     ] tunnel.closed                  reason=server_shutdown subdomain=uppercase user_id=1
+2026-07-28 22:59:38 [info     ] tunnel_manager.stopped         tunnels_closed=1
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.3-final-0 ________________
+
+Name                            Stmts   Miss  Cover   Missing
+-------------------------------------------------------------
+client/__init__.py                  0      0   100%
+client/auth.py                     34     34     0%   7-84
+client/config.py                   38     14    63%   45, 50-54, 59-64, 69-70
+client/display.py                  60     60     0%   14-122
+client/main.py                    125    125     0%   14-298
+client/proxy.py                    30     23    23%   52-124
+client/tunnel.py                  131     73    44%   89-90, 92-95, 100-103, 106, 135-172, 176-183, 187-216, 220-228
+server/__init__.py                  0      0   100%
+server/api/__init__.py              0      0   100%
+server/api/auth.py                 99     31    69%   92, 116-119, 125-127, 143-161, 176-194, 208, 232-233
+server/api/dashboard.py            44     15    66%   41-66, 93-111
+server/api/health.py               28      4    86%   44-46, 51
+server/api/stats.py                15      2    87%   31-32
+server/api/tunnels.py              50     19    62%   54, 69-71, 94-102, 121-130
+server/api/users.py                62     26    58%   67-69, 88-102, 121-129, 145-153
+server/config.py                   61      9    85%   80, 89-95, 101, 106
+server/core/__init__.py             0      0   100%
+server/core/metrics.py             14      0   100%
+server/core/middleware.py          41     18    56%   43-46, 49-75, 88
+server/core/proxy.py               70     57    19%   71-194
+server/core/tunnel_manager.py     135     25    81%   66, 69, 72, 144, 194-197, 200, 208, 221, 226, 239-240, 255, 258-272
+server/db/__init__.py               0      0   100%
+server/db/database.py              41     11    73%   76-81, 86-88, 102-104
+server/logging_config.py           22     13    41%   29-69
+server/main.py                    185    123    34%   78-91, 106-124, 185, 193, 225, 240-370, 380-411, 416-424, 434-436, 448
+server/models/__init__.py           4      0   100%
+server/models/request_log.py       17      1    94%   39
+server/models/tunnel.py            35      1    97%   74
+server/models/user.py              41      2    95%   93, 103
+shared/__init__.py                  0      0   100%
+shared/protocol.py                 96      0   100%
+-------------------------------------------------------------
+TOTAL                            1478    686    54%
+=========================== short test summary info ============================
+FAILED tests/e2e/test_http_tunnel.py::TestE2EHttpTunnel::test_full_request_response_cycle
+FAILED tests/e2e/test_http_tunnel.py::TestE2EHttpTunnel::test_tunnel_returns_502_when_offline
+FAILED tests/e2e/test_http_tunnel.py::TestE2EHttpTunnel::test_large_response_body
+FAILED tests/integration/test_reconnect.py::TestReconnectLogic::test_stops_after_max_retries
+FAILED tests/integration/test_tunnel_flow.py::TestTunnelAPI::test_list_tunnels_authenticated
+FAILED tests/integration/test_tunnel_flow.py::TestTunnelAPI::test_get_unknown_tunnel
+FAILED tests/integration/test_tunnel_flow.py::TestProxyFlow::test_tunnel_not_found_returns_502
+FAILED tests/integration/test_tunnel_flow.py::TestProxyFlow::test_proxy_resolves_response
+FAILED tests/unit/test_tunnel_manager.py::TestTunnelManagerRegistration::test_invalid_subdomain
+======================== 9 failed, 51 passed in 24.31s =========================

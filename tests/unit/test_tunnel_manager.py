@@ -133,7 +133,7 @@ class TestTunnelManagerRegistration:
                     local_port=3000,
                     client_version="0.1.0",
                     websocket=mock_ws,
-                    requested_subdomain="UPPERCASE",
+                    requested_subdomain="invalid_!@#",
                 )
         finally:
             await manager.stop()

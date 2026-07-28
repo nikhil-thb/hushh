@@ -14,6 +14,7 @@ from __future__ import annotations
 
 from collections.abc import AsyncGenerator
 from unittest.mock import AsyncMock, MagicMock
+from typing import Any
 
 import pytest
 import pytest_asyncio
@@ -58,7 +59,7 @@ def settings() -> Settings:
 
 
 @pytest_asyncio.fixture(scope="function")
-async def engine(settings: Settings):
+async def engine(settings: Settings) -> AsyncGenerator[Any, None]:
     _engine = create_async_engine(
         "sqlite+aiosqlite:///:memory:",
         connect_args={"check_same_thread": False},
@@ -72,7 +73,7 @@ async def engine(settings: Settings):
 
 
 @pytest_asyncio.fixture(scope="function")
-async def db_session(engine) -> AsyncGenerator[AsyncSession, None]:
+async def db_session(engine: Any) -> AsyncGenerator[AsyncSession, None]:
     factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
     async with factory() as session:
         yield session
@@ -111,12 +112,13 @@ def mock_websocket() -> MagicMock:
 
 
 @pytest_asyncio.fixture(scope="function")
-async def app(settings: Settings, engine):
+async def app(settings: Settings, engine: Any, tunnel_manager: TunnelManager) -> AsyncGenerator[Any, None]:
     """Create a FastAPI test application with in-memory DB."""
     # Override the database session to use the test engine
     from sqlalchemy.ext.asyncio import async_sessionmaker
 
     _app = create_app(settings)
+    _app.state.tunnel_manager = tunnel_manager
 
     # Override the get_session dependency
     factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
@@ -141,7 +143,7 @@ async def app(settings: Settings, engine):
 
 
 @pytest_asyncio.fixture(scope="function")
-async def http_client(app) -> AsyncGenerator[AsyncClient, None]:
+async def http_client(app: Any) -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         yield client
 
@@ -159,7 +161,7 @@ async def admin_token(http_client: AsyncClient, settings: Settings) -> str:
         json={"email": settings.admin_email, "password": settings.admin_password},
     )
     assert resp.status_code == 200, resp.text
-    return resp.json()["access_token"]
+    return str(resp.json()["access_token"])
 
 
 @pytest_asyncio.fixture(scope="function")
@@ -169,7 +171,7 @@ async def admin_api_key(http_client: AsyncClient, settings: Settings) -> str:
         json={"email": settings.admin_email, "password": settings.admin_password},
     )
     assert resp.status_code == 200
-    return resp.json()["api_key"]
+    return str(resp.json()["api_key"])
 
 
 # ---------------------------------------------------------------------------

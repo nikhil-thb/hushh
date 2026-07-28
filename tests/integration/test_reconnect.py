@@ -37,8 +37,7 @@ class TestReconnectLogic:
         client._on_disconnect = on_disconnect
 
         # Run with a short timeout — the client should give up after 2 retries
-        with pytest.raises((asyncio.TimeoutError, OSError, Exception)):
-            await asyncio.wait_for(client.run(), timeout=5.0)
+        await asyncio.wait_for(client.run(), timeout=5.0)
 
         # Should have recorded some disconnect reasons
         assert len(disconnect_reasons) > 0

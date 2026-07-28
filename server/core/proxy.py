@@ -156,7 +156,7 @@ async def route_request(
     from server.models.request_log import RequestLog
     from server.models.tunnel import TunnelRecord
 
-    async def _log_request():
+    async def _log_request() -> None:
         try:
             async for session in get_session():
                 # Get the tunnel record ID

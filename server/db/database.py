@@ -17,6 +17,7 @@ from collections.abc import AsyncGenerator
 
 import structlog
 from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
@@ -37,7 +38,7 @@ _engine = None
 _async_session_factory: async_sessionmaker[AsyncSession] | None = None
 
 
-def _get_engine():  # type: ignore[return]
+def _get_engine() -> AsyncEngine:
     global _engine
     if _engine is None:
         settings = get_settings()

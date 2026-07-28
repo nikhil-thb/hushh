@@ -8,11 +8,12 @@ from __future__ import annotations
 
 import pytest
 from httpx import AsyncClient
+from server.config import Settings
 
 
 class TestLogin:
     @pytest.mark.asyncio
-    async def test_login_success(self, http_client: AsyncClient, settings) -> None:
+    async def test_login_success(self, http_client: AsyncClient, settings: Settings) -> None:
         resp = await http_client.post(
             "/auth/login",
             json={"email": settings.admin_email, "password": settings.admin_password},
@@ -25,7 +26,7 @@ class TestLogin:
         assert data["email"] == settings.admin_email
 
     @pytest.mark.asyncio
-    async def test_login_wrong_password(self, http_client: AsyncClient, settings) -> None:
+    async def test_login_wrong_password(self, http_client: AsyncClient, settings: Settings) -> None:
         resp = await http_client.post(
             "/auth/login",
             json={"email": settings.admin_email, "password": "wrong_password"},
@@ -51,7 +52,7 @@ class TestLogin:
 
 class TestWhoAmI:
     @pytest.mark.asyncio
-    async def test_whoami_with_valid_token(self, http_client: AsyncClient, admin_token: str, settings) -> None:
+    async def test_whoami_with_valid_token(self, http_client: AsyncClient, admin_token: str, settings: Settings) -> None:
         resp = await http_client.get(
             "/auth/whoami",
             headers={"Authorization": f"Bearer {admin_token}"},

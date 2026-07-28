@@ -8,6 +8,7 @@ WebSocket to simulate a connected tunnel client.
 from __future__ import annotations
 
 import json
+from typing import Any
 from unittest.mock import AsyncMock
 
 import pytest
@@ -78,7 +79,7 @@ class TestProxyFlow:
 
     @pytest.mark.asyncio
     async def test_proxy_resolves_response(
-        self, app, http_client: AsyncClient, admin_api_key: str
+        self, app: Any, http_client: AsyncClient, admin_api_key: str
     ) -> None:
         """Register a mock tunnel and simulate the client responding to a request."""
         manager: TunnelManager = app.state.tunnel_manager
