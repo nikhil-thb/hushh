@@ -25,7 +25,7 @@ type TunnelInfo = {
   client_version: string;
   created_at: string;
   last_seen_at: string;
-  pending_requests: int;
+  pending_requests: number;
 };
 
 export default function TunnelsPage() {
