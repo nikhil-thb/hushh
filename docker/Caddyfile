@@ -46,6 +46,7 @@
     @is_dashboard {
         host hushh.online
         not path /auth/*
+        not path /api/*
         not path /tunnels/*
         not path /users/*
         not path /stats/*
