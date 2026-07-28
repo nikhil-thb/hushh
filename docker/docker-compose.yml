@@ -42,6 +42,25 @@ services:
       retries: 3
       start_period: 10s
 
+  # ── Hushh Tunnel Dashboard (Frontend) ─────────────────────────────────────
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
+    image: hushh-frontend:latest
+    container_name: hushh-frontend
+    restart: unless-stopped
+    environment:
+      # Use relative path so the frontend calls Caddy, which proxies to backend
+      NEXT_PUBLIC_API_URL: ""
+    networks:
+      - hushh_net
+    expose:
+      - "3000"
+    depends_on:
+      server:
+        condition: service_healthy
+
   # ── Caddy (TLS termination + reverse proxy) ───────────────────────────────
   caddy:
     image: caddy:2-alpine

@@ -42,7 +42,23 @@
         header Upgrade websocket
     }
 
-    handle @websocket {
+    # 1. Dashboard Web UI (Only for hushh.online)
+    @is_dashboard {
+        host hushh.online
+        not path /api/*
+        not path /tunnel/ws
+    }
+    handle @is_dashboard {
+        reverse_proxy hushh-frontend:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+
+    # 2. WebSocket Tunnel API
+    handle /tunnel/ws {
         reverse_proxy hushh-server:8000 {
             header_up Host {host}
             header_up X-Real-IP {remote_host}
@@ -56,7 +72,7 @@
         }
     }
 
-    # All other HTTP traffic
+    # 3. All other HTTP traffic (REST APIs and active tunnels)
     handle {
         reverse_proxy hushh-server:8000 {
             header_up Host {host}
