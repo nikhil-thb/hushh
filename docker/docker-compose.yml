@@ -61,7 +61,10 @@ services:
 
   # ── Caddy (TLS termination + reverse proxy) ───────────────────────────────
   caddy:
-    image: caddy:2-alpine
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.caddy
+    image: hushh-caddy:latest
     container_name: hushh-caddy
     restart: unless-stopped
     ports:
