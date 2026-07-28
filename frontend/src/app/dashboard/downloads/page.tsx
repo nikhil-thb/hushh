@@ -21,7 +21,7 @@ export default function DownloadsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-slate-950 p-3 rounded-md border border-slate-800 font-mono text-sm text-slate-300">
-              <span className="text-blue-400">$</span> pip install hushh
+              <span className="text-blue-400">$</span> pip install hushh-tunnel
             </div>
             <div className="text-sm text-slate-400 space-y-1">
               <p>Latest Version: v0.1.0</p>
@@ -42,7 +42,7 @@ export default function DownloadsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-slate-950 p-3 rounded-md border border-slate-800 font-mono text-sm text-slate-300">
-              <span className="text-blue-400">$</span> pip install hushh
+              <span className="text-blue-400">$</span> pip install hushh-tunnel
             </div>
             <div className="text-sm text-slate-400 space-y-1">
               <p>Latest Version: v0.1.0</p>
@@ -63,7 +63,7 @@ export default function DownloadsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-slate-950 p-3 rounded-md border border-slate-800 font-mono text-sm text-slate-300">
-              <span className="text-blue-400">$</span> pip install hushh
+              <span className="text-blue-400">$</span> pip install hushh-tunnel
             </div>
             <div className="text-sm text-slate-400 space-y-1">
               <p>Latest Version: v0.1.0</p>

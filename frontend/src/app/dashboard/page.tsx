@@ -106,10 +106,10 @@ export default function DashboardHome() {
                 <span className="text-slate-500"># Install the CLI</span>
                 <div className="flex items-center space-x-2 mt-2">
                   <code className="flex-1 px-3 py-2 bg-slate-900 rounded border border-slate-700 truncate">
-                    pip install hushh
+                    pip install hushh-tunnel
                   </code>
                   <Button 
-                    onClick={() => { navigator.clipboard.writeText(`pip install hushh`); alert('Command copied!'); }} 
+                    onClick={() => { navigator.clipboard.writeText(`pip install hushh-tunnel`); alert('Command copied!'); }} 
                     variant="secondary" size="sm" className="bg-slate-800 hover:bg-slate-700"
                   >
                     <Copy className="w-4 h-4" />

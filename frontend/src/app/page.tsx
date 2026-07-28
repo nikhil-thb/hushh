@@ -47,7 +47,7 @@ export default function LandingPage() {
                 </Button>
               </Link>
               <div className="flex items-center bg-slate-900 border border-slate-800 rounded-md px-4 h-12 font-mono text-sm text-slate-300">
-                <span className="text-slate-500 mr-2">$</span> pip install hushh
+                <span className="text-slate-500 mr-2">$</span> pip install hushh-tunnel
               </div>
             </div>
           </div>
@@ -100,7 +100,7 @@ export default function LandingPage() {
               </div>
               <div className="space-y-4 text-slate-300">
                 <p><span className="text-slate-500"># 1. Install the CLI via pip</span><br/>
-                <span className="text-blue-400">$</span> pip install hushh</p>
+                <span className="text-blue-400">$</span> pip install hushh-tunnel</p>
                 
                 <p><span className="text-slate-500"># 2. Authenticate your machine</span><br/>
                 <span className="text-blue-400">$</span> hushh login</p>
