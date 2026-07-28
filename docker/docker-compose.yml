@@ -7,8 +7,6 @@
 #   HUSHH_ADMIN_PASSWORD    — First admin account password
 #   CLOUDFLARE_API_TOKEN    — For Caddy wildcard TLS DNS challenge
 
-version: "3.9"
-
 services:
   # ── Hushh Tunnel Server ───────────────────────────────────────────────────
   server:
