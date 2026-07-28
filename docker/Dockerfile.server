@@ -62,4 +62,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
 
 # Run database migrations then start server
-CMD ["sh", "-c", "alembic upgrade head && uvicorn server.main:app --host $HUSHH_HOST --port $HUSHH_PORT --log-config /dev/null --access-log"]
+CMD ["sh", "-c", "alembic upgrade head && uvicorn server.main:app --host $HUSHH_HOST --port $HUSHH_PORT --access-log"]
