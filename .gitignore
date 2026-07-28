@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment & secrets
+.env
+.env.local
+*.env
+!.env.example
+terraform/*.tfvars
+!terraform/*.tfvars.example
+
+# Alembic
+# Keep migrations in VCS — don't ignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Docker volumes (local dev)
+caddy_data/
+caddy_config/
+
+# SQLite databases (dev only)
+*.db
+*.sqlite3
+
+# Hushh client config (user-specific)
+~/.hushh/
+
+# Node (docs tooling if used)
+node_modules/
+
+# Terraform state
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/.terraform.lock.hcl

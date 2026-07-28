@@ -1,0 +1,76 @@
+# Hushh Tunnel — Production Docker Compose
+# Usage: docker compose -f docker/docker-compose.yml up -d
+#
+# Required environment variables (set in .env or shell):
+#   HUSHH_SECRET_KEY        — JWT signing secret
+#   HUSHH_ADMIN_EMAIL       — First admin account email
+#   HUSHH_ADMIN_PASSWORD    — First admin account password
+#   CLOUDFLARE_API_TOKEN    — For Caddy wildcard TLS DNS challenge
+
+version: "3.9"
+
+services:
+  # ── Hushh Tunnel Server ───────────────────────────────────────────────────
+  server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.server
+    image: hushh-server:latest
+    container_name: hushh-server
+    restart: unless-stopped
+    environment:
+      HUSHH_HOST: "0.0.0.0"
+      HUSHH_PORT: "8000"
+      HUSHH_DOMAIN: "${HUSHH_DOMAIN:-hushh.online}"
+      HUSHH_DATABASE_URL: "sqlite+aiosqlite:////data/hushh.db"
+      HUSHH_SECRET_KEY: "${HUSHH_SECRET_KEY}"
+      HUSHH_ADMIN_EMAIL: "${HUSHH_ADMIN_EMAIL:-admin@hushh.online}"
+      HUSHH_ADMIN_PASSWORD: "${HUSHH_ADMIN_PASSWORD}"
+      HUSHH_LOG_LEVEL: "${HUSHH_LOG_LEVEL:-INFO}"
+      HUSHH_LOG_JSON: "true"
+      HUSHH_METRICS_ENABLED: "true"
+    volumes:
+      - server_data:/data
+    networks:
+      - hushh_net
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # ── Caddy (TLS termination + reverse proxy) ───────────────────────────────
+  caddy:
+    image: caddy:2-alpine
+    container_name: hushh-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      CLOUDFLARE_API_TOKEN: "${CLOUDFLARE_API_TOKEN}"
+    networks:
+      - hushh_net
+    depends_on:
+      server:
+        condition: service_healthy
+
+volumes:
+  server_data:
+    driver: local
+  caddy_data:
+    driver: local
+  caddy_config:
+    driver: local
+
+networks:
+  hushh_net:
+    driver: bridge

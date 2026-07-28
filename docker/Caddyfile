@@ -1,0 +1,75 @@
+# Hushh Tunnel — Caddyfile
+#
+# Requires: Caddy built with the Cloudflare DNS provider plugin.
+# Image: caddy:2-alpine with xcaddy or ghcr.io/caddy/caddy:2-builder
+#
+# This Caddyfile:
+#   - Redirects HTTP → HTTPS for all hushh.online domains
+#   - Terminates TLS with wildcard cert (*.hushh.online) via Cloudflare DNS challenge
+#   - Proxies all traffic to the FastAPI server (WebSocket-aware)
+#   - Adds security headers
+#
+# Environment variables required:
+#   CLOUDFLARE_API_TOKEN — Cloudflare API token with Zone:DNS:Edit permission
+
+{
+    # Global options
+    email admin@hushh.online
+    # Use ACME staging for testing (comment out for production)
+    # acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+}
+
+# ── Wildcard HTTPS for all tunnel subdomains ──────────────────────────────────
+*.hushh.online, hushh.online {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        # Request wildcard certificate
+        resolvers 1.1.1.1
+    }
+
+    # Security headers
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+    }
+
+    # WebSocket upgrade support (required for /tunnel/ws)
+    @websocket {
+        header Connection *Upgrade*
+        header Upgrade websocket
+    }
+
+    handle @websocket {
+        reverse_proxy hushh-server:8000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+
+            transport http {
+                dial_timeout 10s
+                response_header_timeout 0  # WebSocket — no timeout
+            }
+        }
+    }
+
+    # All other HTTP traffic
+    handle {
+        reverse_proxy hushh-server:8000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+
+            transport http {
+                dial_timeout 5s
+                response_header_timeout 60s
+                keepalive 30s
+                keepalive_idle_conns 10
+            }
+        }
+    }
+}

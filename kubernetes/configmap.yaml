@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hushh-config
+  namespace: hushh
+data:
+  HUSHH_HOST: "0.0.0.0"
+  HUSHH_PORT: "8000"
+  HUSHH_DOMAIN: "hushh.online"
+  HUSHH_DATABASE_URL: "sqlite+aiosqlite:////data/hushh.db"
+  HUSHH_LOG_LEVEL: "INFO"
+  HUSHH_LOG_JSON: "true"
+  HUSHH_METRICS_ENABLED: "true"
+  HUSHH_MAX_TUNNELS_PER_USER: "5"
+  HUSHH_MAX_CONCURRENT_TUNNELS: "500"
+  HUSHH_HEARTBEAT_INTERVAL: "15"
+  HUSHH_HEARTBEAT_TIMEOUT: "45"
+  HUSHH_IDLE_TIMEOUT: "28800"
+  HUSHH_REQUEST_TIMEOUT: "30"

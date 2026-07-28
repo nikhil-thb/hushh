@@ -1,0 +1,60 @@
+# ── Build stage ───────────────────────────────────────────────────────────────
+FROM python:3.12-slim AS builder
+
+WORKDIR /app
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY pyproject.toml ./
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir -e ".[dev]" --prefix=/install
+
+# ── Runtime stage ─────────────────────────────────────────────────────────────
+FROM python:3.12-slim AS runtime
+
+LABEL org.opencontainers.image.title="Hushh Tunnel Server"
+LABEL org.opencontainers.image.description="Production-ready reverse tunneling platform"
+LABEL org.opencontainers.image.source="https://github.com/hushh-ai/hushh-tunnel"
+LABEL org.opencontainers.image.licenses="MIT"
+
+WORKDIR /app
+
+# Create a non-root user
+RUN groupadd --gid 1001 hushh && \
+    useradd --uid 1001 --gid hushh --shell /bin/bash --create-home hushh
+
+# Copy installed packages from builder
+COPY --from=builder /install /usr/local
+
+# Copy application source
+COPY server/ ./server/
+COPY shared/ ./shared/
+COPY alembic.ini ./
+
+# Copy and install the package itself
+COPY pyproject.toml ./
+RUN pip install --no-cache-dir -e . --no-deps
+
+# Create data directory for SQLite
+RUN mkdir -p /data && chown hushh:hushh /data
+
+USER hushh
+
+# Environment defaults (override at deploy time)
+ENV HUSHH_HOST=0.0.0.0 \
+    HUSHH_PORT=8000 \
+    HUSHH_DATABASE_URL=sqlite+aiosqlite:////data/hushh.db \
+    HUSHH_LOG_JSON=true
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
+
+# Run database migrations then start server
+CMD ["sh", "-c", "alembic upgrade head && uvicorn server.main:app --host $HUSHH_HOST --port $HUSHH_PORT --log-config /dev/null --access-log"]

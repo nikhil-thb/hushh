@@ -1,0 +1,18 @@
+# Dockerfile for the Hushh CLI client (useful for integration tests)
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY pyproject.toml ./
+RUN pip install --upgrade pip && pip install --no-cache-dir -e .
+
+COPY client/ ./client/
+COPY shared/ ./shared/
+
+RUN groupadd --gid 1001 hushh && \
+    useradd --uid 1001 --gid hushh --shell /bin/bash --create-home hushh
+
+USER hushh
+
+ENTRYPOINT ["hushh"]
+CMD ["--help"]

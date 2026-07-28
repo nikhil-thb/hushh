@@ -1,0 +1,39 @@
+# Hushh Tunnel — Development Docker Compose
+# Mounts source code for hot-reload. No Caddy — direct HTTP on port 8000.
+# Usage: docker compose -f docker/docker-compose.dev.yml up
+
+version: "3.9"
+
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.server
+    image: hushh-server:dev
+    container_name: hushh-server-dev
+    command: uvicorn server.main:app --host 0.0.0.0 --port 8000 --reload --log-config /dev/null
+    environment:
+      HUSHH_HOST: "0.0.0.0"
+      HUSHH_PORT: "8000"
+      HUSHH_DOMAIN: "localhost"
+      HUSHH_DATABASE_URL: "sqlite+aiosqlite:////data/hushh.db"
+      HUSHH_SECRET_KEY: "dev_secret_key_change_in_production"
+      HUSHH_ADMIN_EMAIL: "admin@hushh.online"
+      HUSHH_ADMIN_PASSWORD: "adminpassword"
+      HUSHH_LOG_LEVEL: "DEBUG"
+      HUSHH_LOG_JSON: "false"
+    volumes:
+      - ../server:/app/server
+      - ../shared:/app/shared
+      - dev_data:/data
+    ports:
+      - "8000:8000"
+    networks:
+      - hushh_dev
+
+volumes:
+  dev_data:
+
+networks:
+  hushh_dev:
+    driver: bridge
