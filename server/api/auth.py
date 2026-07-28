@@ -24,7 +24,7 @@ from typing import Annotated
 import jwt
 import structlog
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.security import APIKeyHeader, HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, EmailStr
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -37,6 +37,7 @@ from server.models.user import User
 logger = structlog.get_logger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])
 _bearer = HTTPBearer(auto_error=False)
+_api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 
 # ---------------------------------------------------------------------------
@@ -104,19 +105,33 @@ async def _decode_token(token: str, settings: Settings) -> int:
 
 
 async def get_current_user(
-    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(_bearer)],
     session: Annotated[AsyncSession, Depends(get_session)],
     settings: Annotated[Settings, Depends(get_settings)],
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(_bearer)] = None,
+    x_api_key: Annotated[str | None, Depends(_api_key_header)] = None,
 ) -> User:
-    if credentials is None:
+    token_or_key = x_api_key or (credentials.credentials if credentials else None)
+    if not token_or_key:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated.")
 
-    user_id = await _decode_token(credentials.credentials, settings)
-    result = await session.execute(select(User).where(User.id == user_id, User.is_active == True))  # noqa: E712
-    user = result.scalar_one_or_none()
-    if user is None:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found.")
-    return user
+    # Try JWT decoding
+    try:
+        user_id = await _decode_token(token_or_key, settings)
+        result = await session.execute(select(User).where(User.id == user_id, User.is_active == True))  # noqa: E712
+        user = result.scalar_one_or_none()
+        if user is not None:
+            return user
+    except HTTPException:
+        pass  # Fall through to API key check
+
+    # Try API key check
+    result = await session.execute(select(User).where(User.is_active == True))  # noqa: E712
+    users = result.scalars().all()
+    for user in users:
+        if user.verify_api_key(token_or_key):
+            return user
+
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token or API key.")
 
 
 async def get_current_admin(
