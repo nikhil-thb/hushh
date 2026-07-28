@@ -322,16 +322,29 @@ async def _handle_tunnel_websocket(websocket: WebSocket, state: Any) -> None:
         from server.models.tunnel import TunnelRecord, TunnelStatus
 
         async for session in get_session():
-            record = TunnelRecord(
-                subdomain=subdomain,
-                user_id=user.id,
-                local_port=register_msg.local_port,
-                client_version=register_msg.client_version,
-                target=f"localhost:{register_msg.local_port}",
-                status=TunnelStatus.ACTIVE,
-                connected_at=datetime.now(UTC),
-            )
-            session.add(record)
+            from sqlalchemy import select
+            res = await session.execute(select(TunnelRecord).where(TunnelRecord.subdomain == subdomain))
+            existing_record = res.scalar_one_or_none()
+
+            if existing_record:
+                existing_record.status = TunnelStatus.ACTIVE
+                existing_record.connected_at = datetime.now(UTC)
+                existing_record.local_port = register_msg.local_port
+                existing_record.client_version = register_msg.client_version
+                existing_record.target = f"localhost:{register_msg.local_port}"
+                existing_record.user_id = user.id
+            else:
+                record = TunnelRecord(
+                    subdomain=subdomain,
+                    user_id=user.id,
+                    local_port=register_msg.local_port,
+                    client_version=register_msg.client_version,
+                    target=f"localhost:{register_msg.local_port}",
+                    status=TunnelStatus.ACTIVE,
+                    connected_at=datetime.now(UTC),
+                )
+                session.add(record)
+            
             await session.commit()
             break
 
