@@ -14,24 +14,17 @@ Note: This test uses the test app's internal tunnel manager so no real
 
 from __future__ import annotations
 
-import asyncio
 import json
 import socket
-from contextlib import asynccontextmanager
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from threading import Thread
+from http.server import BaseHTTPRequestHandler
 from typing import Any
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock
 
 import pytest
 from httpx import AsyncClient
-
 from server.core.tunnel_manager import TunnelManager
 from shared.protocol import (
-    MessageType,
-    RequestMessage,
     ResponseMessage,
-    serialize_message,
 )
 
 

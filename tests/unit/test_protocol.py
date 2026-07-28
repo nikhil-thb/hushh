@@ -2,17 +2,13 @@
 
 from __future__ import annotations
 
-import base64
 import json
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import pytest
 from pydantic import ValidationError
-
 from shared.protocol import (
-    DisconnectMessage,
     ErrorMessage,
-    HeartbeatAckMessage,
     HeartbeatMessage,
     MessageType,
     RegisterAckMessage,

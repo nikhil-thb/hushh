@@ -2,10 +2,6 @@
 
 from __future__ import annotations
 
-import re
-
-import pytest
-
 from server.core.tunnel_manager import _SUBDOMAIN_ALPHABET, _SUBDOMAIN_PATTERN
 
 

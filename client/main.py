@@ -14,24 +14,21 @@ Commands:
 from __future__ import annotations
 
 import asyncio
-import sys
-from typing import Annotated, Optional
+from typing import Annotated
 
 import structlog
 import typer
-from rich.console import Console
 from rich.table import Table
 
-
-from client.auth import AuthError, login as _login, whoami as _whoami
-from client.config import clear_config, load_config, save_config, ClientConfig, DEFAULT_SERVER_URL
+from client.auth import AuthError
+from client.auth import login as _login
+from client.config import DEFAULT_SERVER_URL, ClientConfig, clear_config, load_config, save_config
 from client.display import (
     console,
     print_banner,
     print_disconnected,
     print_error,
     print_info,
-    print_reconnecting,
     print_request,
     print_success,
     print_tunnel_url,
@@ -58,7 +55,7 @@ log = structlog.get_logger(__name__)
 
 @app.command("login")
 def cmd_login(
-    api_key: Annotated[Optional[str], typer.Argument(help="Optional API key to login directly.")] = None,
+    api_key: Annotated[str | None, typer.Argument(help="Optional API key to login directly.")] = None,
     email: Annotated[str, typer.Option("--email", "-e", help="Your account email.")] = "",
     password: Annotated[str, typer.Option("--password", "-p", hide_input=True, help="Your password.")] = "",
     server: Annotated[str, typer.Option("--server", help="Server base URL.")] = DEFAULT_SERVER_URL,
@@ -75,7 +72,7 @@ def cmd_login(
                     if resp.status_code == 401:
                         print_error("Invalid API key.")
                         raise typer.Exit(1)
-                    
+
                     config = ClientConfig(server_url=server, api_key=api_key, email="authenticated")
                     save_config(config)
                     print_success("Logged in successfully via API key")
@@ -84,7 +81,7 @@ def cmd_login(
                 pw = password or typer.prompt("Password", hide_input=True)
                 email_out, key_out = await _login(em, pw, server_url=server)
                 print_success(f"Logged in as [bold]{email_out}[/bold]")
-                
+
             print_info("API key saved to [bold]~/.hushh/config.json[/bold]")
         except AuthError as exc:
             print_error(str(exc))
@@ -132,11 +129,11 @@ def cmd_whoami() -> None:
 def cmd_http(
     port: Annotated[int, typer.Argument(help="Local port to expose, e.g. 3000")],
     subdomain: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--subdomain", "-s", help="Custom subdomain (e.g. myapi)."),
     ] = None,
     server: Annotated[
-        Optional[str],
+        str | None,
         typer.Option("--server", help="Override server URL."),
     ] = None,
     reconnect: Annotated[bool, typer.Option("--reconnect/--no-reconnect", help="Auto-reconnect on disconnect.")] = True,

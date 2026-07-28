@@ -14,15 +14,11 @@ from __future__ import annotations
 
 import asyncio
 import json
-from collections.abc import Callable, Coroutine
+from collections.abc import Callable
 from typing import Any
 
 import structlog
 import websockets
-from websockets.exceptions import ConnectionClosed
-
-from client.config import ClientConfig
-from client.proxy import forward
 from shared.protocol import (
     DisconnectMessage,
     HeartbeatMessage,
@@ -32,6 +28,10 @@ from shared.protocol import (
     parse_server_message,
     serialize_message,
 )
+from websockets.exceptions import ConnectionClosed
+
+from client.config import ClientConfig
+from client.proxy import forward
 
 logger = structlog.get_logger(__name__)
 
@@ -113,7 +113,7 @@ class TunnelClient:
             logger.info("tunnel.reconnecting", attempt=attempt, backoff_seconds=backoff)
             try:
                 await asyncio.wait_for(self._stop_event.wait(), timeout=backoff)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 pass
             backoff = min(backoff * 2, 30.0)
 

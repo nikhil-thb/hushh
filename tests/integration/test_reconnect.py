@@ -7,10 +7,8 @@ Tests the exponential backoff and max_retries behaviour.
 from __future__ import annotations
 
 import asyncio
-from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-
 from client.config import ClientConfig
 from client.tunnel import TunnelClient
 

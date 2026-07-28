@@ -33,17 +33,26 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
 
-import structlog
 import uvicorn
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, status
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
+from shared.protocol import (
+    DisconnectMessage,
+    ErrorMessage,
+    HeartbeatAckMessage,
+    MessageType,
+    RegisterAckMessage,
+    RegisterMessage,
+    ResponseMessage,
+    parse_client_message,
+    serialize_message,
+)
 from sqlalchemy import select
 from starlette.requests import Request
 from starlette.responses import Response
 
-from server.api import auth, health, stats, tunnels, users, dashboard
-from server.api.auth import _decode_token
+from server.api import auth, dashboard, health, stats, tunnels, users
 from server.config import Settings, get_settings
 from server.core.metrics import AUTH_FAILURE_TOTAL, AUTH_SUCCESS_TOTAL
 from server.core.middleware import RequestSizeLimitMiddleware, TunnelRoutingMiddleware
@@ -55,18 +64,6 @@ from server.core.tunnel_manager import (
 from server.db.database import close_db, get_session, init_db
 from server.logging_config import configure_logging, get_logger
 from server.models.user import User
-from shared.protocol import (
-    DisconnectMessage,
-    ErrorMessage,
-    HeartbeatAckMessage,
-    HeartbeatMessage,
-    MessageType,
-    RegisterAckMessage,
-    RegisterMessage,
-    ResponseMessage,
-    parse_client_message,
-    serialize_message,
-)
 
 logger = get_logger(__name__)
 
@@ -192,7 +189,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     # ── WebSocket tunnel endpoint ────────────────────────────────────────────
     @app.websocket("/tunnel/ws")
-    async def tunnel_websocket_endpoint(websocket: WebSocket) -> None:  # noqa: RUF029
+    async def tunnel_websocket_endpoint(websocket: WebSocket) -> None:
         await _handle_tunnel_websocket(websocket, app.state)
 
     return app
@@ -319,10 +316,11 @@ async def _handle_tunnel_websocket(websocket: WebSocket, state: Any) -> None:
         log.info("ws.registered", subdomain=subdomain, user_id=user.id)
 
         # ── Update Database ──────────────────────────────────────────────────
+        from datetime import UTC, datetime
+
         from server.db.database import get_session
         from server.models.tunnel import TunnelRecord, TunnelStatus
-        from datetime import datetime, UTC
-        
+
         async for session in get_session():
             record = TunnelRecord(
                 subdomain=subdomain,
@@ -349,19 +347,21 @@ async def _handle_tunnel_websocket(websocket: WebSocket, state: Any) -> None:
     finally:
         if subdomain is not None:
             await manager.unregister(subdomain, reason="websocket_closed")
-            
+
             # Update database status
+            from datetime import UTC, datetime
+
+            from sqlalchemy import update
+
             from server.db.database import get_session
             from server.models.tunnel import TunnelRecord, TunnelStatus
-            from sqlalchemy import update
-            from datetime import datetime, UTC
-            
+
             async for session in get_session():
                 await session.execute(
                     update(TunnelRecord)
                     .where(TunnelRecord.subdomain == subdomain)
                     .values(
-                        status=TunnelStatus.CLOSED, 
+                        status=TunnelStatus.CLOSED,
                         closed_at=datetime.now(UTC),
                         disconnected_at=datetime.now(UTC)
                     )

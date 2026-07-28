@@ -4,4 +4,4 @@ from server.models.request_log import RequestLog
 from server.models.tunnel import TunnelRecord
 from server.models.user import User
 
-__all__ = ["User", "TunnelRecord", "RequestLog"]
+__all__ = ["RequestLog", "TunnelRecord", "User"]

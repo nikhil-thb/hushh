@@ -33,7 +33,7 @@ class TunnelRecord(Base):
     subdomain: Mapped[str] = mapped_column(String(63), unique=True, nullable=False, index=True)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     local_port: Mapped[int] = mapped_column(Integer, nullable=False)
-    
+
     # New dashboard fields
     protocol: Mapped[str] = mapped_column(String(16), default="http", nullable=False)
     target: Mapped[str] = mapped_column(String(255), nullable=True) # E.g., 'localhost:3000'
@@ -67,8 +67,8 @@ class TunnelRecord(Base):
     client_version: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
     # Relationship
-    user: Mapped["User"] = relationship("User", back_populates="tunnel_records")  # type: ignore[name-defined]  # noqa: F821
-    requests: Mapped[list["RequestLog"]] = relationship("RequestLog", back_populates="tunnel", cascade="all, delete-orphan") # type: ignore[name-defined]  # noqa: F821
+    user: Mapped[User] = relationship("User", back_populates="tunnel_records")  # type: ignore[name-defined]  # noqa: F821
+    requests: Mapped[list[RequestLog]] = relationship("RequestLog", back_populates="tunnel", cascade="all, delete-orphan") # type: ignore[name-defined]  # noqa: F821
 
     def __repr__(self) -> str:
         return f"<TunnelRecord subdomain={self.subdomain!r} status={self.status} user_id={self.user_id}>"

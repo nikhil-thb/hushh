@@ -7,10 +7,9 @@ import os
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy.ext.asyncio import create_async_engine
-
 from server.db.database import Base
 from server.models import tunnel, user  # noqa: F401 — populate metadata
+from sqlalchemy.ext.asyncio import create_async_engine
 
 # Alembic Config object
 config = context.config

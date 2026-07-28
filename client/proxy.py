@@ -9,10 +9,8 @@ everything into memory by streaming when possible.
 
 from __future__ import annotations
 
-import structlog
-
 import httpx
-
+import structlog
 from shared.protocol import RequestMessage, ResponseMessage
 
 logger = structlog.get_logger(__name__)

@@ -19,6 +19,7 @@ from uuid import UUID, uuid4
 
 import structlog
 from fastapi import Request, Response
+from shared.protocol import RequestMessage, ResponseMessage, serialize_message
 
 from server.config import Settings
 from server.core.metrics import (
@@ -29,7 +30,6 @@ from server.core.metrics import (
     HTTP_RESPONSE_SIZE_BYTES,
 )
 from server.core.tunnel_manager import Tunnel
-from shared.protocol import RequestMessage, ResponseMessage, serialize_message
 
 logger = structlog.get_logger(__name__)
 
@@ -113,7 +113,7 @@ async def route_request(
     # ── Await response ─────────────────────────────────────────────────────
     try:
         resp_msg: ResponseMessage = await asyncio.wait_for(fut, timeout=settings.request_timeout)
-    except asyncio.TimeoutError:
+    except TimeoutError:
         tunnel.pending_requests.pop(request_id, None)
         HTTP_REQUEST_TIMEOUT_TOTAL.inc()
         logger.warning("proxy.timeout", subdomain=tunnel.subdomain, path=path, method=request.method)
@@ -150,11 +150,12 @@ async def route_request(
     )
 
     # ── Database metrics ───────────────────────────────────────────────────
+    from sqlalchemy import select, update
+
     from server.db.database import get_session
     from server.models.request_log import RequestLog
     from server.models.tunnel import TunnelRecord
-    from sqlalchemy import select, update
-    
+
     async def _log_request():
         try:
             async for session in get_session():
@@ -171,7 +172,7 @@ async def route_request(
                         duration_ms=int(elapsed * 1000)
                     )
                     session.add(log)
-                    
+
                     # Update metrics
                     await session.execute(
                         update(TunnelRecord)
@@ -186,7 +187,7 @@ async def route_request(
                 break
         except Exception as e:
             logger.error("proxy.log_request_failed", error=str(e), exc_info=True)
-            
+
     # Fire and forget database update
     asyncio.create_task(_log_request())
 

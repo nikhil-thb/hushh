@@ -11,16 +11,16 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from server.api.auth import get_current_user
 from server.db.database import get_session
-from server.models.user import User
-from server.models.tunnel import TunnelRecord, TunnelStatus
 from server.models.request_log import RequestLog
+from server.models.tunnel import TunnelRecord, TunnelStatus
+from server.models.user import User
 
 router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
 
@@ -94,7 +94,7 @@ async def get_request_logs(
         select(TunnelRecord).where(TunnelRecord.subdomain == subdomain)
     )
     tunnel = tunnel_res.scalar_one_or_none()
-    
+
     if not tunnel:
         raise HTTPException(status_code=404, detail="Tunnel not found")
     if tunnel.user_id != user.id and not user.is_admin:
@@ -107,7 +107,7 @@ async def get_request_logs(
         .order_by(RequestLog.created_at.desc())
         .limit(100)
     )
-    
+
     return [
         RequestLogOut(
             id=l.id,

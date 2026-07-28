@@ -18,7 +18,6 @@ from typing import Any
 
 from pydantic import BaseModel
 
-
 _CONFIG_DIR = Path.home() / ".hushh"
 _CONFIG_FILE = _CONFIG_DIR / "config.json"
 

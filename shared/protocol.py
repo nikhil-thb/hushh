@@ -27,11 +27,10 @@ from __future__ import annotations
 
 import base64
 from enum import StrEnum
-from typing import Annotated, Any, Literal, Union
+from typing import Annotated, Any, Literal
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, Field, field_validator
-
 
 # ---------------------------------------------------------------------------
 # Message types
@@ -122,7 +121,7 @@ class ResponseMessage(BaseMessage):
         status_code: int,
         headers: dict[str, str],
         body: bytes,
-    ) -> "ResponseMessage":
+    ) -> ResponseMessage:
         """Construct a ResponseMessage from raw bytes, encoding body as needed."""
         try:
             text = body.decode("utf-8")
@@ -208,7 +207,7 @@ class RequestMessage(BaseMessage):
         headers: dict[str, str],
         body: bytes,
         request_id: UUID | None = None,
-    ) -> "RequestMessage":
+    ) -> RequestMessage:
         """Construct from raw bytes."""
         rid = request_id or uuid4()
         try:
@@ -248,39 +247,19 @@ class ErrorMessage(BaseMessage):
 
 # All message types that a server can receive from the client
 ClientMessage = Annotated[
-    Union[
-        RegisterMessage,
-        HeartbeatMessage,
-        ResponseMessage,
-        DisconnectMessage,
-    ],
+    RegisterMessage | HeartbeatMessage | ResponseMessage | DisconnectMessage,
     Field(discriminator="type"),
 ]
 
 # All message types that a client can receive from the server
 ServerMessage = Annotated[
-    Union[
-        RegisterAckMessage,
-        HeartbeatAckMessage,
-        RequestMessage,
-        ErrorMessage,
-        DisconnectMessage,
-    ],
+    RegisterAckMessage | HeartbeatAckMessage | RequestMessage | ErrorMessage | DisconnectMessage,
     Field(discriminator="type"),
 ]
 
 # Combined union used for generic parsing
 AnyMessage = Annotated[
-    Union[
-        RegisterMessage,
-        RegisterAckMessage,
-        HeartbeatMessage,
-        HeartbeatAckMessage,
-        RequestMessage,
-        ResponseMessage,
-        ErrorMessage,
-        DisconnectMessage,
-    ],
+    RegisterMessage | RegisterAckMessage | HeartbeatMessage | HeartbeatAckMessage | RequestMessage | ResponseMessage | ErrorMessage | DisconnectMessage,
     Field(discriminator="type"),
 ]
 

@@ -49,7 +49,7 @@ class User(Base):
     )
 
     # Relationship
-    tunnel_records: Mapped[list["TunnelRecord"]] = relationship(  # type: ignore[name-defined]  # noqa: F821
+    tunnel_records: Mapped[list[TunnelRecord]] = relationship(  # type: ignore[name-defined]  # noqa: F821
         "TunnelRecord",
         back_populates="user",
         cascade="all, delete-orphan",
@@ -73,7 +73,7 @@ class User(Base):
         *,
         is_admin: bool = False,
         max_tunnels: int = 5,
-    ) -> tuple["User", str]:
+    ) -> tuple[User, str]:
         """
         Create a new user and return ``(user, plain_api_key)``.
 

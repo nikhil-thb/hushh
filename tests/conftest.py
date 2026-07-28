@@ -12,24 +12,19 @@ Fixtures:
 
 from __future__ import annotations
 
-import asyncio
 from collections.abc import AsyncGenerator
-from typing import Any
 from unittest.mock import AsyncMock, MagicMock
-from uuid import uuid4
 
 import pytest
 import pytest_asyncio
 from fastapi import WebSocket
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-
 from server.config import Settings
 from server.core.tunnel_manager import Tunnel, TunnelManager
 from server.db.database import Base, get_session
 from server.main import create_app
 from server.models.user import User
-
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 # ---------------------------------------------------------------------------
 # Settings
@@ -119,7 +114,7 @@ def mock_websocket() -> MagicMock:
 async def app(settings: Settings, engine):
     """Create a FastAPI test application with in-memory DB."""
     # Override the database session to use the test engine
-    from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine as _cae
+    from sqlalchemy.ext.asyncio import async_sessionmaker
 
     _app = create_app(settings)
 

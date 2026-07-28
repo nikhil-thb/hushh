@@ -6,11 +6,9 @@ import asyncio
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-
 from server.config import Settings
 from server.core.tunnel_manager import (
     SubdomainConflictError,
-    Tunnel,
     TunnelLimitExceededError,
     TunnelManager,
 )
@@ -43,8 +41,6 @@ def mock_ws() -> MagicMock:
     ws.close = AsyncMock()
     return ws
 
-
-@pytest_asyncio_compat = True
 
 
 class TestTunnelManagerRegistration:

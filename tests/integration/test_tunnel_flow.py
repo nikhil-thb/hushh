@@ -7,20 +7,14 @@ WebSocket to simulate a connected tunnel client.
 
 from __future__ import annotations
 
-import asyncio
 import json
-from unittest.mock import AsyncMock, patch
-from uuid import uuid4
+from unittest.mock import AsyncMock
 
 import pytest
 from httpx import AsyncClient
-
-from server.core.tunnel_manager import Tunnel, TunnelManager
+from server.core.tunnel_manager import TunnelManager
 from shared.protocol import (
-    MessageType,
-    RequestMessage,
     ResponseMessage,
-    serialize_message,
 )
 
 

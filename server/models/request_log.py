@@ -33,7 +33,7 @@ class RequestLog(Base):
     )
 
     # Relationship
-    tunnel: Mapped["TunnelRecord"] = relationship("TunnelRecord", back_populates="requests")  # type: ignore[name-defined]  # noqa: F821
+    tunnel: Mapped[TunnelRecord] = relationship("TunnelRecord", back_populates="requests")  # type: ignore[name-defined]  # noqa: F821
 
     def __repr__(self) -> str:
         return f"<RequestLog id={self.id} method={self.method} status={self.status} tunnel_id={self.tunnel_id}>"
