@@ -45,7 +45,11 @@
     # 1. Dashboard Web UI (Only for hushh.online)
     @is_dashboard {
         host hushh.online
-        not path /api/*
+        not path /auth/*
+        not path /tunnels/*
+        not path /users/*
+        not path /stats/*
+        not path /health
         not path /tunnel/ws
     }
     handle @is_dashboard {
