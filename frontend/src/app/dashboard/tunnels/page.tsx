@@ -20,8 +20,8 @@ import { useState } from 'react';
 type TunnelInfo = {
   subdomain: string;
   tunnel_url: string;
-  user_id: int;
-  local_port: int;
+  user_id: number;
+  local_port: number;
   client_version: string;
   created_at: string;
   last_seen_at: string;
