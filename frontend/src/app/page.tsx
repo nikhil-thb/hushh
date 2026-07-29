@@ -118,7 +118,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center space-x-2 mb-4 md:mb-0">
             <div className="w-6 h-6 bg-slate-800 rounded flex items-center justify-center font-bold text-xs text-slate-400">H</div>
-            <span className="text-slate-500 text-sm">© {new Date().getFullYear()} Hushh Tunnel. Open Source.</span>
+            <span className="text-slate-500 text-sm">© {new Date().getFullYear()} Hushh Tunnel.</span>
           </div>
           <div className="flex space-x-6 text-sm text-slate-500">
             <Link href="https://github.com/nikhil-v/hushh" className="hover:text-slate-300">GitHub</Link>
