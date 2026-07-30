@@ -46,16 +46,32 @@ _api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 # ---------------------------------------------------------------------------
 
 
+class RequestOTPRequest(BaseModel):
+    email: EmailStr
+    purpose: str = "register"
+
+
+class VerifyOTPRequest(BaseModel):
+    email: EmailStr
+    otp: str
+    purpose: str = "register"
+
+
+class VerifyOTPResponse(BaseModel):
+    verification_token: str
+
+
 class RegisterRequest(BaseModel):
     email: EmailStr
     password: str
-    captcha_token: str
-    captcha_answer: str
+    verification_token: str
 
 
-class CaptchaResponse(BaseModel):
-    token: str
-    question: str
+class ResetPasswordRequest(BaseModel):
+    email: EmailStr
+    new_password: str
+    verification_token: str
+
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -155,27 +171,42 @@ async def get_current_admin(
 # ---------------------------------------------------------------------------
 
 
-@router.get("/captcha", response_model=CaptchaResponse, summary="Get a math captcha")
-async def get_captcha(settings: Annotated[Settings, Depends(get_settings)]) -> CaptchaResponse:
-    a = random.randint(1, 10)
-    b = random.randint(1, 10)
-    operator = random.choice(["+", "-", "*"])
-    if operator == "+":
-        answer = a + b
-    elif operator == "-":
-        if a < b: 
-            a, b = b, a
-        answer = a - b
-    else:
-        answer = a * b
+from server.core.email import send_otp_email
+from server.core.otp import (
+    create_and_store_otp,
+    decode_verification_token,
+    generate_verification_token,
+    verify_otp_code,
+)
+
+@router.post("/request-otp", summary="Request an OTP via email")
+async def request_otp(
+    body: RequestOTPRequest,
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> dict[str, str]:
+    if body.purpose not in ("register", "reset_password"):
+        raise HTTPException(status_code=400, detail="Invalid purpose.")
         
-    question = f"What is {a} {operator} {b}?"
+    # Generate and store OTP
+    plain_otp = await create_and_store_otp(session, body.email, body.purpose)
     
-    expire = datetime.now(UTC) + timedelta(minutes=5)
-    payload = {"ans": str(answer), "exp": expire}
-    token = jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
+    # Send email
+    send_otp_email(body.email, plain_otp, body.purpose)
     
-    return CaptchaResponse(token=token, question=question)
+    return {"message": "OTP sent successfully."}
+
+
+@router.post("/verify-otp", response_model=VerifyOTPResponse, summary="Verify an OTP")
+async def verify_otp(
+    body: VerifyOTPRequest,
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> VerifyOTPResponse:
+    is_valid = await verify_otp_code(session, body.email, body.otp, body.purpose)
+    if not is_valid:
+        raise HTTPException(status_code=400, detail="Invalid or expired OTP.")
+        
+    token = generate_verification_token(body.email, body.purpose)
+    return VerifyOTPResponse(verification_token=token)
 
 
 @router.post("/register", response_model=LoginResponse, summary="Register a new account")
@@ -185,14 +216,10 @@ async def register(
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> LoginResponse:
     """Create a new user and return a JWT access token and an API key."""
-    # Verify captcha
-    try:
-        payload = jwt.decode(body.captcha_token, settings.secret_key, algorithms=[settings.jwt_algorithm])
-        expected_ans = payload.get("ans")
-        if expected_ans != body.captcha_answer.strip():
-            raise HTTPException(status_code=400, detail="Incorrect captcha answer.")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=400, detail="Invalid or expired captcha token.")
+    # Verify the OTP token
+    verified_email = decode_verification_token(body.verification_token, "register")
+    if verified_email != body.email:
+        raise HTTPException(status_code=400, detail="Invalid or expired verification token.")
 
     # Check if email already exists
     existing = await session.execute(select(User).where(User.email == body.email))
@@ -251,6 +278,29 @@ async def login(
         api_key=plain_key,
         email=user.email,
     )
+
+
+@router.post("/reset-password", summary="Reset a user's password")
+async def reset_password(
+    body: ResetPasswordRequest,
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> dict[str, str]:
+    """Reset a user's password using an OTP verification token."""
+    verified_email = decode_verification_token(body.verification_token, "reset_password")
+    if verified_email != body.email:
+        raise HTTPException(status_code=400, detail="Invalid or expired verification token.")
+        
+    result = await session.execute(select(User).where(User.email == body.email))
+    user = result.scalar_one_or_none()
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+        
+    user.set_password(body.new_password)
+    await session.commit()
+    logger.info("auth.reset_password", user_id=user.id, email=user.email)
+    
+    return {"message": "Password reset successfully."}
 
 
 @router.post("/logout", summary="Logout (client-side token discard)")

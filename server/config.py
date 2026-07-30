@@ -71,6 +71,10 @@ class Settings(BaseSettings):
     admin_email: str = Field("admin@hushh.online")
     admin_password: str = Field("changeme_admin_password")
 
+    # ── Email OTP ─────────────────────────────────────────────────────────
+    sendgrid_api_key: str | None = Field(None, description="SendGrid API key")
+    sendgrid_from_email: str | None = Field(None, description="SendGrid verified sender email")
+
     @field_validator("log_level")
     @classmethod
     def validate_log_level(cls, v: str) -> str:

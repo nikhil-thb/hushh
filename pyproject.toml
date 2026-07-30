@@ -54,6 +54,7 @@ server = [
     "python-multipart>=0.0.9",
     "PyYAML>=6.0.1",
     "structlog>=24.2.0",
+    "sendgrid>=6.11.0",
 ]
 dev = [
     "pytest>=8.2.0",
