@@ -49,7 +49,7 @@ export default function DashboardHome() {
         <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Offline Tunnels</CardTitle>
-            <WifiOff className="w-4 h-4 text-foreground0" />
+            <WifiOff className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             {isLoading ? <Skeleton className="h-8 w-20 bg-accent" /> : (
@@ -103,7 +103,7 @@ export default function DashboardHome() {
               
               {/* Install */}
               <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
-                <span className="text-foreground0"># Install the CLI</span>
+                <span className="text-muted-foreground"># Install the CLI</span>
                 <div className="flex items-center space-x-2 mt-2">
                   <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     pip install hushh-tunnel
@@ -119,7 +119,7 @@ export default function DashboardHome() {
 
               {/* Login */}
               <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
-                <span className="text-foreground0"># Login directly with your API Key</span>
+                <span className="text-muted-foreground"># Login directly with your API Key</span>
                 <div className="flex items-center space-x-2 mt-2">
                   <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     hushh login {apiKey ? apiKey : '...'}
@@ -135,7 +135,7 @@ export default function DashboardHome() {
 
               {/* Basic Tunnel */}
               <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
-                <span className="text-foreground0"># Start a tunnel for local port 3000</span>
+                <span className="text-muted-foreground"># Start a tunnel for local port 3000</span>
                 <div className="flex items-center space-x-2 mt-2">
                   <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     hushh http 3000
@@ -151,7 +151,7 @@ export default function DashboardHome() {
 
               {/* Custom Subdomain */}
               <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
-                <span className="text-foreground0"># Request a custom subdomain</span>
+                <span className="text-muted-foreground"># Request a custom subdomain</span>
                 <div className="flex items-center space-x-2 mt-2">
                   <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     hushh http 8080 --subdomain myapi
@@ -167,7 +167,7 @@ export default function DashboardHome() {
 
               {/* Status */}
               <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
-                <span className="text-foreground0"># View active tunnels</span>
+                <span className="text-muted-foreground"># View active tunnels</span>
                 <div className="flex items-center space-x-2 mt-2">
                   <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     hushh status
@@ -183,7 +183,7 @@ export default function DashboardHome() {
 
               {/* Stop Tunnel */}
               <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
-                <span className="text-foreground0"># Stop a specific tunnel</span>
+                <span className="text-muted-foreground"># Stop a specific tunnel</span>
                 <div className="flex items-center space-x-2 mt-2">
                   <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     hushh stop &lt;subdomain&gt;

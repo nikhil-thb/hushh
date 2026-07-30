@@ -153,7 +153,7 @@ export default function TunnelDetailsPage() {
             <TableBody>
               {logs?.length === 0 ? (
                 <TableRow className="border-border hover:bg-card">
-                  <TableCell colSpan={5} className="text-center py-8 text-foreground0">
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                     No requests recorded yet.
                   </TableCell>
                 </TableRow>

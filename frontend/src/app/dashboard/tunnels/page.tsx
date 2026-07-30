@@ -61,7 +61,7 @@ export default function TunnelsPage() {
         <h1 className="text-3xl font-bold tracking-tight">Active Tunnels</h1>
         <div className="flex items-center space-x-2 w-full sm:w-auto">
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-foreground0" />
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search tunnels..."
               className="pl-9 bg-card border-border"
@@ -90,11 +90,11 @@ export default function TunnelsPage() {
           <TableBody>
             {isLoading ? (
               <TableRow className="border-border hover:bg-card">
-                <TableCell colSpan={6} className="text-center py-8 text-foreground0">Loading tunnels...</TableCell>
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">Loading tunnels...</TableCell>
               </TableRow>
             ) : filteredTunnels?.length === 0 ? (
               <TableRow className="border-border hover:bg-card">
-                <TableCell colSpan={6} className="text-center py-8 text-foreground0">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   No active tunnels found. Run `hushh http 3000` to start one.
                 </TableCell>
               </TableRow>
@@ -107,8 +107,8 @@ export default function TunnelsPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium text-slate-200">{tunnel.tunnel_url}</div>
-                    <div className="text-xs text-foreground0">{tunnel.subdomain}</div>
+                    <div className="font-medium text-muted-foreground">{tunnel.tunnel_url}</div>
+                    <div className="text-xs text-muted-foreground">{tunnel.subdomain}</div>
                   </TableCell>
                   <TableCell>
                     <span className="font-mono text-muted-foreground">{tunnel.local_port}</span>

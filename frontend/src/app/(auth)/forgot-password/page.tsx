@@ -139,7 +139,7 @@ export default function ForgotPasswordPage() {
           </div>
           <Button 
             type="submit" 
-            className={`w-full ${isSendDisabled ? 'bg-accent text-foreground0' : 'bg-primary hover:bg-primary/90 text-foreground'}`}
+            className={`w-full ${isSendDisabled ? 'bg-accent text-muted-foreground' : 'bg-primary hover:bg-primary/90 text-primary-foreground'}`}
             disabled={isSendDisabled}
           >
             {isSubmittingEmail ? 'Sending...' : 'Send Verification Code'}

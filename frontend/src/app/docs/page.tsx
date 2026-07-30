@@ -52,7 +52,7 @@ export default function DocumentationPage() {
       <nav className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-bold text-lg shadow-lg shadow-blue-500/20">H</div>
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-bold text-lg text-primary-foreground shadow-lg shadow-blue-500/20">H</div>
             <span className="font-semibold text-lg tracking-tight">Hushh Tunnel</span>
           </Link>
           <div className="flex items-center space-x-6 text-sm font-medium">
@@ -68,7 +68,7 @@ export default function DocumentationPage() {
         <aside className="w-full md:w-64 shrink-0 py-8 md:pr-8 md:sticky md:top-16 md:h-[calc(100vh-4rem)] md:overflow-y-auto hidden md:block border-r border-border/50 scrollbar-hide">
           <div className="space-y-8">
             <div>
-              <h4 className="font-semibold text-slate-100 mb-3 px-3 text-sm uppercase tracking-wider">Getting Started</h4>
+              <h4 className="font-semibold text-foreground mb-3 px-3 text-sm uppercase tracking-wider">Getting Started</h4>
               <ul className="space-y-1.5">
                 <li><a href="#overview" className={navItemClass('overview')}><Book className="w-4 h-4 mr-2" /> Overview</a></li>
                 <li><a href="#quickstart" className={navItemClass('quickstart')}><Zap className="w-4 h-4 mr-2" /> Quick Start</a></li>
@@ -77,7 +77,7 @@ export default function DocumentationPage() {
             </div>
             
             <div>
-              <h4 className="font-semibold text-slate-100 mb-3 px-3 text-sm uppercase tracking-wider">Guides & Examples</h4>
+              <h4 className="font-semibold text-foreground mb-3 px-3 text-sm uppercase tracking-wider">Guides & Examples</h4>
               <ul className="space-y-1.5">
                 <li><a href="#examples" className={navItemClass('examples')}><Code className="w-4 h-4 mr-2" /> Use Case Examples</a></li>
                 <li><a href="#custom-subdomains" className={navItemClass('custom-subdomains')}><Globe className="w-4 h-4 mr-2" /> Custom Subdomains</a></li>
@@ -85,7 +85,7 @@ export default function DocumentationPage() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-slate-100 mb-3 px-3 text-sm uppercase tracking-wider">Reference</h4>
+              <h4 className="font-semibold text-foreground mb-3 px-3 text-sm uppercase tracking-wider">Reference</h4>
               <ul className="space-y-1.5">
                 <li><a href="#cli-reference" className={navItemClass('cli-reference')}><Terminal className="w-4 h-4 mr-2" /> CLI Reference</a></li>
               </ul>
@@ -123,7 +123,7 @@ export default function DocumentationPage() {
                 <h3 className="text-xl font-semibold mb-3 flex items-center"><span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-blue-400 text-sm mr-3">1</span> Install the Application</h3>
                 <p className="text-muted-foreground mb-4 text-sm">Hushh Tunnel is distributed via Python's package manager. Install it easily using pip.</p>
                 <div className="bg-background p-4 rounded-lg font-mono text-sm text-muted-foreground border border-border/50 shadow-inner">
-                  <span className="text-foreground0 select-none">$ </span>pip install hushh-tunnel
+                  <span className="text-muted-foreground select-none">$ </span>pip install hushh-tunnel
                 </div>
               </div>
 
@@ -131,7 +131,7 @@ export default function DocumentationPage() {
                 <h3 className="text-xl font-semibold mb-3 flex items-center"><span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-blue-400 text-sm mr-3">2</span> Log in to your Account</h3>
                 <p className="text-muted-foreground mb-4 text-sm">Authenticate your device to securely link it with your account.</p>
                 <div className="bg-background p-4 rounded-lg font-mono text-sm text-muted-foreground border border-border/50 shadow-inner">
-                  <span className="text-foreground0 select-none">$ </span>hushh login
+                  <span className="text-muted-foreground select-none">$ </span>hushh login
                 </div>
               </div>
 
@@ -139,11 +139,11 @@ export default function DocumentationPage() {
                 <h3 className="text-xl font-semibold mb-3 flex items-center"><span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-blue-400 text-sm mr-3">3</span> Expose your Local Service</h3>
                 <p className="text-muted-foreground mb-4 text-sm">Pass the port number where your local application is running to instantly create a public URL.</p>
                 <div className="bg-background p-4 rounded-lg font-mono text-sm text-muted-foreground border border-border/50 shadow-inner">
-                  <span className="text-foreground0 select-none">$ </span>hushh http 3000
+                  <span className="text-muted-foreground select-none">$ </span>hushh http 3000
                   <br /><br />
                   <span className="text-emerald-400">✔ Connected</span><br />
                   <span className="text-muted-foreground">Forwarding:</span><br />
-                  <span className="text-blue-400">https://a8x91kp3.hushh.online</span> <span className="text-foreground0">→</span> http://localhost:3000
+                  <span className="text-blue-400">https://a8x91kp3.hushh.online</span> <span className="text-muted-foreground">→</span> http://localhost:3000
                 </div>
               </div>
             </div>
@@ -190,8 +190,8 @@ export default function DocumentationPage() {
               <h3 className="text-xl font-semibold mb-3 text-foreground">Sharing a Web Application Demo</h3>
               <p className="text-muted-foreground mb-3">If you are running a React, Vue, or Next.js app on port 3000 and want to share it with a client:</p>
               <div className="bg-background p-4 rounded-lg font-mono text-sm text-muted-foreground border border-border">
-                <span className="text-foreground0">$ </span>npm run dev <span className="text-foreground0"># starts app on port 3000</span><br />
-                <span className="text-foreground0">$ </span>hushh http 3000
+                <span className="text-muted-foreground">$ </span>npm run dev <span className="text-muted-foreground"># starts app on port 3000</span><br />
+                <span className="text-muted-foreground">$ </span>hushh http 3000
               </div>
               <p className="text-muted-foreground mt-3 text-sm italic">You can now send the `https://[id].hushh.online` link directly to your client. They can view it in their browser instantly.</p>
             </div>
@@ -200,8 +200,8 @@ export default function DocumentationPage() {
               <h3 className="text-xl font-semibold mb-3 text-foreground">Testing Webhooks Locally</h3>
               <p className="text-muted-foreground mb-3">When testing integrations from services like Stripe, GitHub, or Twilio, they need a public URL to send events to. Simply expose your local backend server (e.g., port 8000):</p>
               <div className="bg-background p-4 rounded-lg font-mono text-sm text-muted-foreground border border-border">
-                <span className="text-foreground0">$ </span>python manage.py runserver 8000<br />
-                <span className="text-foreground0">$ </span>hushh http 8000
+                <span className="text-muted-foreground">$ </span>python manage.py runserver 8000<br />
+                <span className="text-muted-foreground">$ </span>hushh http 8000
               </div>
               <p className="text-muted-foreground mt-3 text-sm italic">Copy your tunnel URL and paste it into the webhook configuration of Stripe/GitHub. All events will route directly to your local code.</p>
             </div>
@@ -214,10 +214,10 @@ export default function DocumentationPage() {
               For predictable, memorable URLs, you can specify a custom subdomain when starting your tunnel.
             </p>
             <div className="bg-background p-4 rounded-lg font-mono text-sm text-muted-foreground border border-border mb-4">
-              <span className="text-foreground0">$ </span>hushh http 8080 --subdomain my-awesome-app
+              <span className="text-muted-foreground">$ </span>hushh http 8080 --subdomain my-awesome-app
               <br /><br />
               <span className="text-emerald-400">✔ Connected</span><br />
-              <span className="text-blue-400">https://my-awesome-app.hushh.online</span> <span className="text-foreground0">→</span> http://localhost:8080
+              <span className="text-blue-400">https://my-awesome-app.hushh.online</span> <span className="text-muted-foreground">→</span> http://localhost:8080
             </div>
             <div className="bg-blue-900/20 border border-blue-900/50 rounded-lg p-4 flex items-start">
               <Book className="w-5 h-5 text-blue-400 mr-3 shrink-0 mt-0.5" />
@@ -233,8 +233,8 @@ export default function DocumentationPage() {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-card border-b border-border">
-                    <th className="py-3 px-4 font-semibold text-slate-200">Command</th>
-                    <th className="py-3 px-4 font-semibold text-slate-200">Description</th>
+                    <th className="py-3 px-4 font-semibold text-muted-foreground">Command</th>
+                    <th className="py-3 px-4 font-semibold text-muted-foreground">Description</th>
                   </tr>
                 </thead>
                 <tbody className="text-muted-foreground divide-y divide-slate-800/50">

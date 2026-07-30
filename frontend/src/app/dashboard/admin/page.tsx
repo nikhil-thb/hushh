@@ -111,7 +111,7 @@ export default function AdminDashboardPage() {
                 {users.map((u) => (
                   <tr key={u.id} className="hover:bg-accent/30 transition">
                     <td className="py-4 pr-4 font-mono text-muted-foreground">{u.id}</td>
-                    <td className="py-4 pr-4 text-slate-200">{u.email}</td>
+                    <td className="py-4 pr-4 text-muted-foreground">{u.email}</td>
                     <td className="py-4 pr-4 text-muted-foreground">{new Date(u.created_at).toLocaleDateString()}</td>
                     <td className="py-4 pr-4">
                       {u.is_active ? (
@@ -130,7 +130,7 @@ export default function AdminDashboardPage() {
                           Admin
                         </span>
                       ) : (
-                        <span className="text-foreground0 text-xs">User</span>
+                        <span className="text-muted-foreground text-xs">User</span>
                       )}
                     </td>
                     <td className="py-4 pr-4 text-right space-x-2">
