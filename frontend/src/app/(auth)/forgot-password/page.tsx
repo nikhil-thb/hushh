@@ -38,8 +38,15 @@ export default function ForgotPasswordPage() {
   const {
     register: registerEmail,
     handleSubmit: handleSubmitEmail,
-    formState: { errors: emailErrors, isSubmitting: isSubmittingEmail },
-  } = useForm<z.infer<typeof emailSchema>>({ resolver: zodResolver(emailSchema) });
+    watch: watchEmail,
+    formState: { errors: emailErrors, isSubmitting: isSubmittingEmail, isValid: isEmailValid },
+  } = useForm<z.infer<typeof emailSchema>>({ 
+    resolver: zodResolver(emailSchema),
+    mode: 'onChange',
+  });
+
+  const currentEmailValue = watchEmail('email');
+  const isSendDisabled = isSubmittingEmail || !isEmailValid || !currentEmailValue;
 
   const {
     register: registerOtp,
@@ -130,7 +137,11 @@ export default function ForgotPasswordPage() {
               )}
             </div>
           </div>
-          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isSubmittingEmail}>
+          <Button 
+            type="submit" 
+            className={`w-full ${isSendDisabled ? 'bg-slate-800 text-slate-500' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+            disabled={isSendDisabled}
+          >
             {isSubmittingEmail ? 'Sending...' : 'Send Verification Code'}
           </Button>
         </form>

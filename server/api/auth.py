@@ -187,6 +187,13 @@ async def request_otp(
     if body.purpose not in ("register", "reset_password"):
         raise HTTPException(status_code=400, detail="Invalid purpose.")
         
+    # Check if email already exists for registration
+    existing = await session.execute(select(User).where(User.email == body.email))
+    user_exists = existing.scalar_one_or_none() is not None
+    
+    if body.purpose == "register" and user_exists:
+        raise HTTPException(status_code=400, detail="Email already registered.")
+        
     # Generate and store OTP
     plain_otp = await create_and_store_otp(session, body.email, body.purpose)
     
