@@ -107,7 +107,7 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-white mb-8">
+      <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-foreground mb-8">
         Create a new account
       </h2>
 
@@ -126,7 +126,7 @@ export default function RegisterPage() {
                 id="email"
                 type="email"
                 {...registerEmail('email')}
-                className="bg-slate-950 border-slate-800"
+                className="bg-background border-border"
               />
               {emailErrors.email && (
                 <p className="mt-1 text-sm text-red-400">{emailErrors.email.message}</p>
@@ -135,7 +135,7 @@ export default function RegisterPage() {
           </div>
           <Button 
             type="submit" 
-            className={`w-full ${isSendDisabled ? 'bg-slate-800 text-slate-500' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+            className={`w-full ${isSendDisabled ? 'bg-accent text-foreground0' : 'bg-primary hover:bg-primary/90 text-foreground'}`}
             disabled={isSendDisabled}
           >
             {isSubmittingEmail ? 'Sending...' : 'Send Verification Code'}
@@ -145,7 +145,7 @@ export default function RegisterPage() {
 
       {step === 2 && (
         <form className="space-y-6" onSubmit={handleSubmitOtp(onOtpSubmit)}>
-          <p className="text-sm text-slate-400 text-center">
+          <p className="text-sm text-muted-foreground text-center">
             Enter the 6-digit verification code sent to {email}
           </p>
           <div>
@@ -156,7 +156,7 @@ export default function RegisterPage() {
                 type="text"
                 placeholder="123456"
                 {...registerOtp('otp')}
-                className="bg-slate-950 border-slate-800 font-mono text-center tracking-[0.5em]"
+                className="bg-background border-border font-mono text-center tracking-[0.5em]"
                 maxLength={6}
                 autoComplete="off"
               />
@@ -166,10 +166,10 @@ export default function RegisterPage() {
             </div>
           </div>
           <div className="flex gap-4">
-             <Button type="button" variant="outline" className="w-1/3 border-slate-700 text-slate-300" onClick={() => setStep(1)}>
+             <Button type="button" variant="outline" className="w-1/3 border-slate-700 text-muted-foreground" onClick={() => setStep(1)}>
               Back
             </Button>
-            <Button type="submit" className="w-2/3 bg-blue-600 hover:bg-blue-700" disabled={isSubmittingOtp}>
+            <Button type="submit" className="w-2/3 bg-primary hover:bg-primary/90" disabled={isSubmittingOtp}>
               {isSubmittingOtp ? 'Verifying...' : 'Verify Code'}
             </Button>
           </div>
@@ -188,7 +188,7 @@ export default function RegisterPage() {
                 id="password"
                 type="password"
                 {...registerPassword('password')}
-                className="bg-slate-950 border-slate-800"
+                className="bg-background border-border"
               />
               {passwordErrors.password && (
                 <p className="mt-1 text-sm text-red-400">{passwordErrors.password.message}</p>
@@ -202,22 +202,22 @@ export default function RegisterPage() {
                 id="confirmPassword"
                 type="password"
                 {...registerPassword('confirmPassword')}
-                className="bg-slate-950 border-slate-800"
+                className="bg-background border-border"
               />
               {passwordErrors.confirmPassword && (
                 <p className="mt-1 text-sm text-red-400">{passwordErrors.confirmPassword.message}</p>
               )}
             </div>
           </div>
-          <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isSubmittingPassword}>
+          <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isSubmittingPassword}>
             {isSubmittingPassword ? 'Creating account...' : 'Create account'}
           </Button>
         </form>
       )}
 
-      <p className="mt-10 text-center text-sm text-slate-400">
+      <p className="mt-10 text-center text-sm text-muted-foreground">
         Already have an account?{' '}
-        <Link href="/login" className="font-semibold leading-6 text-blue-500 hover:text-blue-400">
+        <Link href="/login" className="font-semibold leading-6 text-primary hover:text-primary/80">
           Sign in
         </Link>
       </p>

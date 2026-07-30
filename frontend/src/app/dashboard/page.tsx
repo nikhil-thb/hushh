@@ -34,37 +34,37 @@ export default function DashboardHome() {
       <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Active Tunnels</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Active Tunnels</CardTitle>
             <Radio className="w-4 h-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
-            {isLoading ? <Skeleton className="h-8 w-20 bg-slate-800" /> : (
+            {isLoading ? <Skeleton className="h-8 w-20 bg-accent" /> : (
               <div className="text-3xl font-bold">{stats?.active_tunnels || 0}</div>
             )}
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Offline Tunnels</CardTitle>
-            <WifiOff className="w-4 h-4 text-slate-500" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">Offline Tunnels</CardTitle>
+            <WifiOff className="w-4 h-4 text-foreground0" />
           </CardHeader>
           <CardContent>
-            {isLoading ? <Skeleton className="h-8 w-20 bg-slate-800" /> : (
+            {isLoading ? <Skeleton className="h-8 w-20 bg-accent" /> : (
               <div className="text-3xl font-bold">{stats?.offline_tunnels || 0}</div>
             )}
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Total Requests</CardTitle>
-            <Activity className="w-4 h-4 text-blue-500" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Requests</CardTitle>
+            <Activity className="w-4 h-4 text-primary" />
           </CardHeader>
           <CardContent>
-            {isLoading ? <Skeleton className="h-8 w-20 bg-slate-800" /> : (
+            {isLoading ? <Skeleton className="h-8 w-20 bg-accent" /> : (
               <div className="text-3xl font-bold">{stats?.total_requests || 0}</div>
             )}
           </CardContent>
@@ -73,19 +73,19 @@ export default function DashboardHome() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* API Key Card */}
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-card border-border">
           <CardHeader>
             <CardTitle>Your API Key</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-muted-foreground">
               Use this key to authenticate your CLI client. Keep it secret.
             </p>
             <div className="flex items-center space-x-2">
-              <code className="flex-1 p-3 bg-slate-950 border border-slate-800 rounded-md font-mono text-sm text-slate-300 truncate">
+              <code className="flex-1 p-3 bg-background border border-border rounded-md font-mono text-sm text-muted-foreground truncate">
                 {apiKey ? 'hushh_••••••••••••••••••••••••' : 'Loading...'}
               </code>
-              <Button onClick={copyApiKey} variant="secondary" className="bg-slate-800 hover:bg-slate-700">
+              <Button onClick={copyApiKey} variant="secondary" className="bg-accent hover:bg-slate-700">
                 <Copy className="w-4 h-4 mr-2" />
                 Copy
               </Button>
@@ -94,7 +94,7 @@ export default function DashboardHome() {
         </Card>
 
         {/* CLI Commands Card */}
-        <Card className="bg-slate-900 border-slate-800 lg:col-span-2">
+        <Card className="bg-card border-border lg:col-span-2">
           <CardHeader>
             <CardTitle>CLI Commands</CardTitle>
           </CardHeader>
@@ -102,15 +102,15 @@ export default function DashboardHome() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               
               {/* Install */}
-              <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-sm text-slate-300">
-                <span className="text-slate-500"># Install the CLI</span>
+              <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
+                <span className="text-foreground0"># Install the CLI</span>
                 <div className="flex items-center space-x-2 mt-2">
-                  <code className="flex-1 px-3 py-2 bg-slate-900 rounded border border-slate-700 truncate">
+                  <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     pip install hushh-tunnel
                   </code>
                   <Button 
                     onClick={() => { navigator.clipboard.writeText(`pip install hushh-tunnel`); alert('Command copied!'); }} 
-                    variant="secondary" size="sm" className="bg-slate-800 hover:bg-slate-700"
+                    variant="secondary" size="sm" className="bg-accent hover:bg-slate-700"
                   >
                     <Copy className="w-4 h-4" />
                   </Button>
@@ -118,15 +118,15 @@ export default function DashboardHome() {
               </div>
 
               {/* Login */}
-              <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-sm text-slate-300">
-                <span className="text-slate-500"># Login directly with your API Key</span>
+              <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
+                <span className="text-foreground0"># Login directly with your API Key</span>
                 <div className="flex items-center space-x-2 mt-2">
-                  <code className="flex-1 px-3 py-2 bg-slate-900 rounded border border-slate-700 truncate">
+                  <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     hushh login {apiKey ? apiKey : '...'}
                   </code>
                   <Button 
                     onClick={() => { navigator.clipboard.writeText(`hushh login ${apiKey}`); alert('Command copied!'); }} 
-                    variant="secondary" size="sm" className="bg-slate-800 hover:bg-slate-700"
+                    variant="secondary" size="sm" className="bg-accent hover:bg-slate-700"
                   >
                     <Copy className="w-4 h-4" />
                   </Button>
@@ -134,15 +134,15 @@ export default function DashboardHome() {
               </div>
 
               {/* Basic Tunnel */}
-              <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-sm text-slate-300">
-                <span className="text-slate-500"># Start a tunnel for local port 3000</span>
+              <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
+                <span className="text-foreground0"># Start a tunnel for local port 3000</span>
                 <div className="flex items-center space-x-2 mt-2">
-                  <code className="flex-1 px-3 py-2 bg-slate-900 rounded border border-slate-700 truncate">
+                  <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     hushh http 3000
                   </code>
                   <Button 
                     onClick={() => { navigator.clipboard.writeText(`hushh http 3000`); alert('Command copied!'); }} 
-                    variant="secondary" size="sm" className="bg-slate-800 hover:bg-slate-700"
+                    variant="secondary" size="sm" className="bg-accent hover:bg-slate-700"
                   >
                     <Copy className="w-4 h-4" />
                   </Button>
@@ -150,15 +150,15 @@ export default function DashboardHome() {
               </div>
 
               {/* Custom Subdomain */}
-              <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-sm text-slate-300">
-                <span className="text-slate-500"># Request a custom subdomain</span>
+              <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
+                <span className="text-foreground0"># Request a custom subdomain</span>
                 <div className="flex items-center space-x-2 mt-2">
-                  <code className="flex-1 px-3 py-2 bg-slate-900 rounded border border-slate-700 truncate">
+                  <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     hushh http 8080 --subdomain myapi
                   </code>
                   <Button 
                     onClick={() => { navigator.clipboard.writeText(`hushh http 8080 --subdomain myapi`); alert('Command copied!'); }} 
-                    variant="secondary" size="sm" className="bg-slate-800 hover:bg-slate-700"
+                    variant="secondary" size="sm" className="bg-accent hover:bg-slate-700"
                   >
                     <Copy className="w-4 h-4" />
                   </Button>
@@ -166,15 +166,15 @@ export default function DashboardHome() {
               </div>
 
               {/* Status */}
-              <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-sm text-slate-300">
-                <span className="text-slate-500"># View active tunnels</span>
+              <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
+                <span className="text-foreground0"># View active tunnels</span>
                 <div className="flex items-center space-x-2 mt-2">
-                  <code className="flex-1 px-3 py-2 bg-slate-900 rounded border border-slate-700 truncate">
+                  <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     hushh status
                   </code>
                   <Button 
                     onClick={() => { navigator.clipboard.writeText(`hushh status`); alert('Command copied!'); }} 
-                    variant="secondary" size="sm" className="bg-slate-800 hover:bg-slate-700"
+                    variant="secondary" size="sm" className="bg-accent hover:bg-slate-700"
                   >
                     <Copy className="w-4 h-4" />
                   </Button>
@@ -182,15 +182,15 @@ export default function DashboardHome() {
               </div>
 
               {/* Stop Tunnel */}
-              <div className="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-sm text-slate-300">
-                <span className="text-slate-500"># Stop a specific tunnel</span>
+              <div className="bg-background border border-border rounded-lg p-4 font-mono text-sm text-muted-foreground">
+                <span className="text-foreground0"># Stop a specific tunnel</span>
                 <div className="flex items-center space-x-2 mt-2">
-                  <code className="flex-1 px-3 py-2 bg-slate-900 rounded border border-slate-700 truncate">
+                  <code className="flex-1 px-3 py-2 bg-card rounded border border-slate-700 truncate">
                     hushh stop &lt;subdomain&gt;
                   </code>
                   <Button 
                     onClick={() => { navigator.clipboard.writeText(`hushh stop <subdomain>`); alert('Command copied!'); }} 
-                    variant="secondary" size="sm" className="bg-slate-800 hover:bg-slate-700"
+                    variant="secondary" size="sm" className="bg-accent hover:bg-slate-700"
                   >
                     <Copy className="w-4 h-4" />
                   </Button>

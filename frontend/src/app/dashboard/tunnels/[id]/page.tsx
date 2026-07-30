@@ -56,14 +56,14 @@ export default function TunnelDetailsPage() {
   };
 
   if (isLoading) {
-    return <div className="text-slate-400">Loading tunnel details...</div>;
+    return <div className="text-muted-foreground">Loading tunnel details...</div>;
   }
 
   if (!tunnel) {
     return (
       <div className="text-center py-12">
         <h2 className="text-xl font-semibold mb-2">Tunnel not found</h2>
-        <p className="text-slate-400 mb-6">This tunnel may have been disconnected or doesn't exist.</p>
+        <p className="text-muted-foreground mb-6">This tunnel may have been disconnected or doesn't exist.</p>
         <Link href="/dashboard/tunnels">
           <Button variant="outline">Back to Tunnels</Button>
         </Link>
@@ -74,7 +74,7 @@ export default function TunnelDetailsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-4 mb-2">
-        <Link href="/dashboard/tunnels" className="text-slate-400 hover:text-white transition">
+        <Link href="/dashboard/tunnels" className="text-muted-foreground hover:text-foreground transition">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <h1 className="text-2xl font-bold tracking-tight flex items-center space-x-3">
@@ -84,31 +84,31 @@ export default function TunnelDetailsPage() {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Button onClick={copyUrl} variant="secondary" className="bg-slate-800 hover:bg-slate-700">
+        <Button onClick={copyUrl} variant="secondary" className="bg-accent hover:bg-slate-700">
           <Copy className="w-4 h-4 mr-2" /> Copy URL
         </Button>
-        <Button onClick={() => { refetchTunnel(); refetchLogs(); }} variant="outline" className="border-slate-800 bg-slate-900 text-slate-300">
+        <Button onClick={() => { refetchTunnel(); refetchLogs(); }} variant="outline" className="border-border bg-card text-muted-foreground">
           <RefreshCw className="w-4 h-4 mr-2" /> Refresh
         </Button>
-        <Button onClick={disconnect} variant="destructive" className="bg-red-600 hover:bg-red-700 text-white">
+        <Button onClick={disconnect} variant="destructive" className="bg-red-600 hover:bg-red-700 text-foreground">
           <PowerOff className="w-4 h-4 mr-2" /> Disconnect
         </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Tunnel URL</CardTitle>
-            <Globe className="w-4 h-4 text-blue-500" />
+            <CardTitle className="text-sm font-medium text-muted-foreground">Tunnel URL</CardTitle>
+            <Globe className="w-4 h-4 text-primary" />
           </CardHeader>
           <CardContent>
             <div className="text-lg font-semibold truncate" title={tunnel.tunnel_url}>{tunnel.tunnel_url}</div>
           </CardContent>
         </Card>
         
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Target</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Target</CardTitle>
             <Activity className="w-4 h-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
@@ -116,9 +116,9 @@ export default function TunnelDetailsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Started At</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Started At</CardTitle>
             <Clock className="w-4 h-4 text-purple-500" />
           </CardHeader>
           <CardContent>
@@ -126,9 +126,9 @@ export default function TunnelDetailsPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-slate-800">
+        <Card className="bg-card border-border">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400">Pending Requests</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">Pending Requests</CardTitle>
             <RefreshCw className="w-4 h-4 text-orange-500" />
           </CardHeader>
           <CardContent>
@@ -139,10 +139,10 @@ export default function TunnelDetailsPage() {
 
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4">Latest Requests</h2>
-        <div className="bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+        <div className="bg-card border border-border rounded-lg overflow-hidden">
           <Table>
-            <TableHeader className="bg-slate-950/50">
-              <TableRow className="border-slate-800 hover:bg-transparent">
+            <TableHeader className="bg-background/50">
+              <TableRow className="border-border hover:bg-transparent">
                 <TableHead>Time</TableHead>
                 <TableHead>Method</TableHead>
                 <TableHead>Path</TableHead>
@@ -152,23 +152,23 @@ export default function TunnelDetailsPage() {
             </TableHeader>
             <TableBody>
               {logs?.length === 0 ? (
-                <TableRow className="border-slate-800 hover:bg-slate-900/50">
-                  <TableCell colSpan={5} className="text-center py-8 text-slate-500">
+                <TableRow className="border-border hover:bg-card">
+                  <TableCell colSpan={5} className="text-center py-8 text-foreground0">
                     No requests recorded yet.
                   </TableCell>
                 </TableRow>
               ) : (
                 logs?.map((log: any, i: number) => (
-                  <TableRow key={i} className="border-slate-800 hover:bg-slate-800/50">
-                    <TableCell className="text-slate-400">{new Date(log.created_at).toLocaleTimeString()}</TableCell>
+                  <TableRow key={i} className="border-border hover:bg-accent/50">
+                    <TableCell className="text-muted-foreground">{new Date(log.created_at).toLocaleTimeString()}</TableCell>
                     <TableCell className="font-mono text-blue-400">{log.method}</TableCell>
-                    <TableCell className="text-slate-300">{log.path}</TableCell>
+                    <TableCell className="text-muted-foreground">{log.path}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={log.status < 400 ? 'text-emerald-400 border-emerald-400/20' : 'text-red-400 border-red-400/20'}>
                         {log.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-slate-400">{log.duration}</TableCell>
+                    <TableCell className="text-muted-foreground">{log.duration}</TableCell>
                   </TableRow>
                 ))
               )}

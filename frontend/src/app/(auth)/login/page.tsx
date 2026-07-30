@@ -45,7 +45,7 @@ export default function LoginPage() {
 
   return (
     <div>
-      <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-white mb-8">
+      <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-foreground mb-8">
         Sign in to your account
       </h2>
 
@@ -63,7 +63,7 @@ export default function LoginPage() {
               id="email"
               type="email"
               {...register('email')}
-              className="bg-slate-950 border-slate-800"
+              className="bg-background border-border"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
@@ -75,7 +75,7 @@ export default function LoginPage() {
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
             <div className="text-sm leading-6">
-              <Link href="/forgot-password" className="font-semibold text-blue-500 hover:text-blue-400">
+              <Link href="/forgot-password" className="font-semibold text-primary hover:text-primary/80">
                 Forgot password?
               </Link>
             </div>
@@ -85,7 +85,7 @@ export default function LoginPage() {
               id="password"
               type="password"
               {...register('password')}
-              className="bg-slate-950 border-slate-800"
+              className="bg-background border-border"
             />
             {errors.password && (
               <p className="mt-1 text-sm text-red-400">{errors.password.message}</p>
@@ -93,14 +93,14 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isSubmitting}>
+        <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isSubmitting}>
           {isSubmitting ? 'Signing in...' : 'Sign in'}
         </Button>
       </form>
 
-      <p className="mt-10 text-center text-sm text-slate-400">
+      <p className="mt-10 text-center text-sm text-muted-foreground">
         Not a member?{' '}
-        <Link href="/register" className="font-semibold leading-6 text-blue-500 hover:text-blue-400">
+        <Link href="/register" className="font-semibold leading-6 text-primary hover:text-primary/80">
           Create an account
         </Link>
       </p>

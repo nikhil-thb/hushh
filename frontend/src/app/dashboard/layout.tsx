@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { api } from '@/lib/api';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -52,13 +53,15 @@ export default function DashboardLayout({
   };
 
   return (
-    <div className="flex h-screen bg-slate-950 text-slate-50">
+    <div className="flex h-screen bg-background text-foreground">
       {/* Desktop Sidebar */}
-      <div className="hidden md:flex md:w-64 md:flex-col bg-slate-900 border-r border-slate-800">
+      <div className="hidden md:flex md:w-64 md:flex-col bg-card border-r border-border">
         <div className="flex flex-col flex-grow pt-5 overflow-y-auto">
-          <div className="flex items-center flex-shrink-0 px-4 space-x-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-lg">H</div>
-            <span className="font-semibold text-lg tracking-tight">Hushh Tunnel</span>
+          <div className="flex items-center justify-between px-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center font-bold text-lg text-primary-foreground">H</div>
+              <span className="font-semibold text-lg tracking-tight">Hushh Tunnel</span>
+            </div>
           </div>
           <div className="mt-8 flex-grow flex flex-col">
             <nav className="flex-1 px-2 space-y-1">
@@ -70,13 +73,13 @@ export default function DashboardLayout({
                     href={item.href}
                     className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
                       isActive
-                        ? 'bg-slate-800 text-white'
-                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                        ? 'bg-accent text-accent-foreground'
+                        : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                     }`}
                   >
                     <item.icon
                       className={`mr-3 flex-shrink-0 h-5 w-5 ${
-                        isActive ? 'text-blue-500' : 'text-slate-400 group-hover:text-slate-300'
+                        isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-accent-foreground'
                       }`}
                       aria-hidden="true"
                     />
@@ -89,13 +92,13 @@ export default function DashboardLayout({
                   href="/dashboard/admin"
                   className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
                     pathname === '/dashboard/admin' || pathname.startsWith('/dashboard/admin/')
-                      ? 'bg-slate-800 text-white'
-                      : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                      ? 'bg-accent text-accent-foreground'
+                      : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                   }`}
                 >
                   <Shield
                     className={`mr-3 flex-shrink-0 h-5 w-5 ${
-                      pathname === '/dashboard/admin' || pathname.startsWith('/dashboard/admin/') ? 'text-blue-500' : 'text-slate-400 group-hover:text-slate-300'
+                      pathname === '/dashboard/admin' || pathname.startsWith('/dashboard/admin/') ? 'text-primary' : 'text-muted-foreground group-hover:text-accent-foreground'
                     }`}
                     aria-hidden="true"
                   />
@@ -104,10 +107,14 @@ export default function DashboardLayout({
               )}
             </nav>
           </div>
-          <div className="flex-shrink-0 flex border-t border-slate-800 p-4">
+          <div className="flex-shrink-0 flex flex-col border-t border-border p-4 space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-muted-foreground">Theme</span>
+              <ThemeToggle />
+            </div>
             <button
               onClick={handleLogout}
-              className="flex-shrink-0 w-full group block text-slate-400 hover:text-white transition flex items-center"
+              className="flex-shrink-0 w-full group block text-muted-foreground hover:text-foreground transition flex items-center"
             >
               <LogOut className="inline-block h-5 w-5 mr-2" />
               <span className="text-sm font-medium">Logout</span>
@@ -118,13 +125,14 @@ export default function DashboardLayout({
 
       {/* Main Content Area */}
       <div className="flex flex-col flex-1 w-0 overflow-hidden">
-        <div className="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
+        <div className="md:hidden flex items-center justify-between p-2 border-b border-border bg-card">
           <Button
             variant="ghost"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             <Menu className="h-6 w-6" aria-hidden="true" />
           </Button>
+          <ThemeToggle />
         </div>
         
         <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">

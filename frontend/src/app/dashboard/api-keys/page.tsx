@@ -40,50 +40,50 @@ export default function ApiKeysPage() {
     <div className="space-y-6 max-w-3xl">
       <h1 className="text-3xl font-bold tracking-tight">API Keys</h1>
       
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <Key className="w-5 h-5 text-blue-500" />
+            <Key className="w-5 h-5 text-primary" />
             <span>Authentication Key</span>
           </CardTitle>
-          <CardDescription className="text-slate-400">
+          <CardDescription className="text-muted-foreground">
             Your API key is used to authenticate the Hushh CLI client. Keep it secure and never share it publicly.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">Current API Key</label>
+            <label className="text-sm font-medium text-muted-foreground">Current API Key</label>
             <div className="flex items-center space-x-2">
-              <code className="flex-1 p-3 bg-slate-950 border border-slate-800 rounded-md font-mono text-sm text-slate-300">
+              <code className="flex-1 p-3 bg-background border border-border rounded-md font-mono text-sm text-muted-foreground">
                 {apiKey ? 'hushh_••••••••••••••••••••••••' : 'No API key found'}
               </code>
-              <Button onClick={copyApiKey} variant="secondary" className="bg-slate-800 hover:bg-slate-700">
+              <Button onClick={copyApiKey} variant="secondary" className="bg-accent hover:bg-slate-700">
                 <Copy className="w-4 h-4 mr-2" />
                 Copy
               </Button>
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-800">
+          <div className="pt-4 border-t border-border">
             <Dialog>
               <DialogTrigger render={<Button variant="destructive" className="bg-red-600/10 text-red-500 hover:bg-red-600/20 border border-red-500/20" />}>
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Regenerate Key
               </DialogTrigger>
-              <DialogContent className="bg-slate-900 border-slate-800 text-slate-50">
+              <DialogContent className="bg-card border-border text-foreground">
                 <DialogHeader>
                   <DialogTitle className="flex items-center text-red-500">
                     <AlertTriangle className="w-5 h-5 mr-2" />
                     Regenerate API Key?
                   </DialogTitle>
-                  <DialogDescription className="text-slate-400 pt-2">
+                  <DialogDescription className="text-muted-foreground pt-2">
                     Are you sure you want to regenerate your API key? 
                     This action cannot be undone. Any active clients using the current key will immediately be disconnected and will need to log in again with the new key.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="mt-6">
-                  <Button variant="outline" className="border-slate-800 bg-slate-900 text-slate-300">Cancel</Button>
-                  <Button variant="destructive" onClick={regenerateKey} disabled={isRegenerating} className="bg-red-600 hover:bg-red-700 text-white">
+                  <Button variant="outline" className="border-border bg-card text-muted-foreground">Cancel</Button>
+                  <Button variant="destructive" onClick={regenerateKey} disabled={isRegenerating} className="bg-red-600 hover:bg-red-700 text-foreground">
                     {isRegenerating ? 'Regenerating...' : 'Yes, Regenerate Key'}
                   </Button>
                 </DialogFooter>

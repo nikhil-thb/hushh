@@ -22,24 +22,24 @@ export default function AccountPage() {
     <div className="space-y-6 max-w-3xl">
       <h1 className="text-3xl font-bold tracking-tight">Account Settings</h1>
       
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle>Profile</CardTitle>
-          <CardDescription className="text-slate-400">Your account information</CardDescription>
+          <CardDescription className="text-muted-foreground">Your account information</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-slate-300">Email Address</Label>
-              <div className="flex items-center space-x-2 bg-slate-950 p-2 rounded-md border border-slate-800 text-slate-400">
+              <Label className="text-muted-foreground">Email Address</Label>
+              <div className="flex items-center space-x-2 bg-background p-2 rounded-md border border-border text-muted-foreground">
                 <UserIcon className="w-4 h-4" />
                 <span className="text-sm">{isLoading ? 'Loading...' : user?.email}</span>
               </div>
             </div>
             
             <div className="space-y-2">
-              <Label className="text-slate-300">Member Since</Label>
-              <div className="flex items-center space-x-2 bg-slate-950 p-2 rounded-md border border-slate-800 text-slate-400">
+              <Label className="text-muted-foreground">Member Since</Label>
+              <div className="flex items-center space-x-2 bg-background p-2 rounded-md border border-border text-muted-foreground">
                 <Calendar className="w-4 h-4" />
                 <span className="text-sm">
                   {isLoading ? 'Loading...' : new Date(user?.created_at).toLocaleDateString()}
@@ -50,28 +50,28 @@ export default function AccountPage() {
         </CardContent>
       </Card>
 
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle>Security</CardTitle>
-          <CardDescription className="text-slate-400">Update your password</CardDescription>
+          <CardDescription className="text-muted-foreground">Update your password</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="current-password">Current Password</Label>
-            <Input id="current-password" type="password" className="bg-slate-950 border-slate-800" />
+            <Input id="current-password" type="password" className="bg-background border-border" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="new-password">New Password</Label>
-            <Input id="new-password" type="password" className="bg-slate-950 border-slate-800" />
+            <Input id="new-password" type="password" className="bg-background border-border" />
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700">Update Password</Button>
+          <Button className="bg-primary hover:bg-primary/90">Update Password</Button>
         </CardContent>
       </Card>
 
-      <Card className="bg-slate-900 border-red-900/50">
+      <Card className="bg-card border-red-900/50">
         <CardHeader>
           <CardTitle className="text-red-500">Danger Zone</CardTitle>
-          <CardDescription className="text-slate-400">Permanently delete your account and all associated tunnels.</CardDescription>
+          <CardDescription className="text-muted-foreground">Permanently delete your account and all associated tunnels.</CardDescription>
         </CardHeader>
         <CardContent>
           <Dialog>
@@ -79,17 +79,17 @@ export default function AccountPage() {
               <Trash2 className="w-4 h-4 mr-2" />
               Delete Account
             </DialogTrigger>
-            <DialogContent className="bg-slate-900 border-slate-800 text-slate-50">
+            <DialogContent className="bg-card border-border text-foreground">
               <DialogHeader>
                 <DialogTitle className="text-red-500">Are you absolutely sure?</DialogTitle>
-                <DialogDescription className="text-slate-400">
+                <DialogDescription className="text-muted-foreground">
                   This action cannot be undone. This will permanently delete your account, 
                   terminate all active tunnels, and remove your data from our servers.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="mt-6">
-                <Button variant="outline" className="border-slate-800 bg-slate-900 text-slate-300">Cancel</Button>
-                <Button variant="destructive" className="bg-red-600 hover:bg-red-700 text-white" onClick={() => alert('Not implemented')}>
+                <Button variant="outline" className="border-border bg-card text-muted-foreground">Cancel</Button>
+                <Button variant="destructive" className="bg-red-600 hover:bg-red-700 text-foreground" onClick={() => alert('Not implemented')}>
                   Yes, delete my account
                 </Button>
               </DialogFooter>

@@ -74,22 +74,22 @@ export default function AdminDashboardPage() {
     }
   };
 
-  if (isLoading) return <div className="text-slate-400">Loading admin data...</div>;
+  if (isLoading) return <div className="text-muted-foreground">Loading admin data...</div>;
   if (error) return <div className="text-red-400">{error}</div>;
 
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-white flex items-center">
-          <Shield className="w-8 h-8 text-blue-500 mr-3" />
+        <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center">
+          <Shield className="w-8 h-8 text-primary mr-3" />
           Admin Dashboard
         </h1>
-        <p className="mt-2 text-sm text-slate-400">
+        <p className="mt-2 text-sm text-muted-foreground">
           Manage platform users, reset passwords, and enforce security policies.
         </p>
       </div>
 
-      <Card className="bg-slate-900 border-slate-800">
+      <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle>Registered Users</CardTitle>
           <CardDescription>A complete list of all users on the platform.</CardDescription>
@@ -98,7 +98,7 @@ export default function AdminDashboardPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
               <thead>
-                <tr className="border-b border-slate-800 text-slate-400">
+                <tr className="border-b border-border text-muted-foreground">
                   <th className="pb-3 pr-4 font-medium">ID</th>
                   <th className="pb-3 pr-4 font-medium">Email</th>
                   <th className="pb-3 pr-4 font-medium">Joined</th>
@@ -109,10 +109,10 @@ export default function AdminDashboardPage() {
               </thead>
               <tbody className="divide-y divide-slate-800">
                 {users.map((u) => (
-                  <tr key={u.id} className="hover:bg-slate-800/30 transition">
-                    <td className="py-4 pr-4 font-mono text-slate-400">{u.id}</td>
+                  <tr key={u.id} className="hover:bg-accent/30 transition">
+                    <td className="py-4 pr-4 font-mono text-muted-foreground">{u.id}</td>
                     <td className="py-4 pr-4 text-slate-200">{u.email}</td>
-                    <td className="py-4 pr-4 text-slate-400">{new Date(u.created_at).toLocaleDateString()}</td>
+                    <td className="py-4 pr-4 text-muted-foreground">{new Date(u.created_at).toLocaleDateString()}</td>
                     <td className="py-4 pr-4">
                       {u.is_active ? (
                         <span className="inline-flex items-center text-emerald-400 text-xs px-2 py-1 bg-emerald-400/10 rounded-full">
@@ -130,14 +130,14 @@ export default function AdminDashboardPage() {
                           Admin
                         </span>
                       ) : (
-                        <span className="text-slate-500 text-xs">User</span>
+                        <span className="text-foreground0 text-xs">User</span>
                       )}
                     </td>
                     <td className="py-4 pr-4 text-right space-x-2">
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="bg-transparent border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
+                        className="bg-transparent border-slate-700 text-muted-foreground hover:bg-accent hover:text-foreground"
                         onClick={() => handleResetPassword(u)}
                         title="Reset Password"
                       >
@@ -149,7 +149,7 @@ export default function AdminDashboardPage() {
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            className={`bg-transparent border-slate-700 hover:bg-slate-800 ${
+                            className={`bg-transparent border-slate-700 hover:bg-accent ${
                               u.is_active ? 'text-amber-400 hover:text-amber-300' : 'text-emerald-400 hover:text-emerald-300'
                             }`}
                             onClick={() => handleToggleBlock(u)}
@@ -173,7 +173,7 @@ export default function AdminDashboardPage() {
                 ))}
                 {users.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-400">
+                    <td colSpan={6} className="py-8 text-center text-muted-foreground">
                       No users found.
                     </td>
                   </tr>
