@@ -27,6 +27,8 @@ services:
       HUSHH_LOG_LEVEL: "${HUSHH_LOG_LEVEL:-INFO}"
       HUSHH_LOG_JSON: "true"
       HUSHH_METRICS_ENABLED: "true"
+      HUSHH_SENDGRID_API_KEY: "${HUSHH_SENDGRID_API_KEY}"
+      HUSHH_SENDGRID_FROM_EMAIL: "${HUSHH_SENDGRID_FROM_EMAIL}"
     volumes:
       - server_data:/data
     networks:
