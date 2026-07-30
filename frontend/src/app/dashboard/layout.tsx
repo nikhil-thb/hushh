@@ -10,8 +10,10 @@ import {
   Download, 
   User as UserIcon, 
   LogOut,
-  Menu
+  Menu,
+  Shield
 } from 'lucide-react';
+import { api } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 
 const navigation = [
@@ -30,11 +32,16 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       router.push('/login');
+    } else {
+      api.get('/auth/whoami')
+        .then(res => setIsAdmin(res.data.is_admin))
+        .catch(() => {});
     }
   }, [router]);
 
@@ -77,6 +84,24 @@ export default function DashboardLayout({
                   </Link>
                 );
               })}
+              {isAdmin && (
+                <Link
+                  href="/dashboard/admin"
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                    pathname === '/dashboard/admin' || pathname.startsWith('/dashboard/admin/')
+                      ? 'bg-slate-800 text-white'
+                      : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                  }`}
+                >
+                  <Shield
+                    className={`mr-3 flex-shrink-0 h-5 w-5 ${
+                      pathname === '/dashboard/admin' || pathname.startsWith('/dashboard/admin/') ? 'text-blue-500' : 'text-slate-400 group-hover:text-slate-300'
+                    }`}
+                    aria-hidden="true"
+                  />
+                  Admin
+                </Link>
+              )}
             </nav>
           </div>
           <div className="flex-shrink-0 flex border-t border-slate-800 p-4">

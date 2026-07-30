@@ -6,7 +6,9 @@ Endpoints
 GET  /api/users        — list all users (admin only)
 POST /api/users        — create a new user (admin only)
 GET  /api/users/{id}   — get user detail (admin or self)
-DELETE /api/users/{id} — deactivate user (admin only)
+PATCH /api/users/{id}/status — block/unblock user (admin only)
+POST /api/users/{id}/reset-password — reset user password (admin only)
+DELETE /api/users/{id} — delete user permanently (admin only)
 """
 
 from __future__ import annotations
@@ -15,6 +17,7 @@ from datetime import datetime
 from typing import Annotated
 
 import structlog
+import secrets
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from sqlalchemy import select
@@ -52,6 +55,14 @@ class CreateUserRequest(BaseModel):
 class CreateUserResponse(BaseModel):
     user: UserInfo
     api_key: str  # shown only once
+
+
+class UpdateUserStatusRequest(BaseModel):
+    is_active: bool
+
+
+class ResetPasswordResponse(BaseModel):
+    new_password: str
 
 
 # ---------------------------------------------------------------------------
@@ -136,8 +147,55 @@ async def get_user(
     )
 
 
-@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Deactivate user (admin)")
-async def deactivate_user(
+@router.patch("/{user_id}/status", response_model=UserInfo, summary="Block/Unblock user (admin)")
+async def update_user_status(
+    user_id: int,
+    body: UpdateUserStatusRequest,
+    _admin: Annotated[User, Depends(get_current_admin)],
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> UserInfo:
+    result = await session.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found.")
+    if user.is_admin:
+        raise HTTPException(status_code=400, detail="Cannot block/unblock an admin user.")
+
+    user.is_active = body.is_active
+    await session.flush()
+    logger.info("admin.update_user_status", user_id=user_id, is_active=user.is_active)
+    
+    return UserInfo(
+        id=user.id,
+        email=user.email,
+        is_active=user.is_active,
+        is_admin=user.is_admin,
+        max_tunnels=user.max_tunnels,
+        created_at=user.created_at,
+    )
+
+
+@router.post("/{user_id}/reset-password", response_model=ResetPasswordResponse, summary="Reset user password (admin)")
+async def reset_user_password(
+    user_id: int,
+    _admin: Annotated[User, Depends(get_current_admin)],
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> ResetPasswordResponse:
+    result = await session.execute(select(User).where(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    new_password = secrets.token_urlsafe(12)
+    user.set_password(new_password)
+    await session.flush()
+    logger.info("admin.reset_password", user_id=user_id)
+    
+    return ResetPasswordResponse(new_password=new_password)
+
+
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete user (admin)")
+async def delete_user(
     user_id: int,
     _admin: Annotated[User, Depends(get_current_admin)],
     session: Annotated[AsyncSession, Depends(get_session)],
@@ -147,7 +205,9 @@ async def deactivate_user(
     if user is None:
         raise HTTPException(status_code=404, detail="User not found.")
     if user.is_admin:
-        raise HTTPException(status_code=400, detail="Cannot deactivate an admin user.")
+        raise HTTPException(status_code=400, detail="Cannot delete an admin user.")
 
-    user.is_active = False
-    logger.info("admin.deactivate_user", user_id=user_id)
+    await session.delete(user)
+    await session.flush()
+    logger.info("admin.delete_user", user_id=user_id)
+

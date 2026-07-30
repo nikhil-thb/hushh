@@ -22,6 +22,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Annotated
 
 import jwt
+import random
 import structlog
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import APIKeyHeader, HTTPAuthorizationCredentials, HTTPBearer
@@ -48,6 +49,13 @@ _api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 class RegisterRequest(BaseModel):
     email: EmailStr
     password: str
+    captcha_token: str
+    captcha_answer: str
+
+
+class CaptchaResponse(BaseModel):
+    token: str
+    question: str
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -147,6 +155,29 @@ async def get_current_admin(
 # ---------------------------------------------------------------------------
 
 
+@router.get("/captcha", response_model=CaptchaResponse, summary="Get a math captcha")
+async def get_captcha(settings: Annotated[Settings, Depends(get_settings)]) -> CaptchaResponse:
+    a = random.randint(1, 10)
+    b = random.randint(1, 10)
+    operator = random.choice(["+", "-", "*"])
+    if operator == "+":
+        answer = a + b
+    elif operator == "-":
+        if a < b: 
+            a, b = b, a
+        answer = a - b
+    else:
+        answer = a * b
+        
+    question = f"What is {a} {operator} {b}?"
+    
+    expire = datetime.now(UTC) + timedelta(minutes=5)
+    payload = {"ans": str(answer), "exp": expire}
+    token = jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
+    
+    return CaptchaResponse(token=token, question=question)
+
+
 @router.post("/register", response_model=LoginResponse, summary="Register a new account")
 async def register(
     body: RegisterRequest,
@@ -154,6 +185,15 @@ async def register(
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> LoginResponse:
     """Create a new user and return a JWT access token and an API key."""
+    # Verify captcha
+    try:
+        payload = jwt.decode(body.captcha_token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        expected_ans = payload.get("ans")
+        if expected_ans != body.captcha_answer.strip():
+            raise HTTPException(status_code=400, detail="Incorrect captcha answer.")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=400, detail="Invalid or expired captcha token.")
+
     # Check if email already exists
     existing = await session.execute(select(User).where(User.email == body.email))
     if existing.scalar_one_or_none() is not None:
