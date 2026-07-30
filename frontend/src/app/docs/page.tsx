@@ -42,7 +42,7 @@ export default function DocumentationPage() {
 
   const navItemClass = (id: string) => `flex items-center text-sm px-3 py-2 rounded-md transition ${
     activeSection === id 
-      ? 'text-blue-400 bg-accent/80 font-medium shadow-sm' 
+      ? 'text-blue-600 dark:text-blue-400 bg-accent/80 font-medium shadow-sm' 
       : 'text-muted-foreground hover:text-foreground hover:bg-card'
   }`;
 
@@ -120,7 +120,7 @@ export default function DocumentationPage() {
             
             <div className="space-y-6">
               <div className="bg-card border border-border rounded-xl p-6">
-                <h3 className="text-xl font-semibold mb-3 flex items-center"><span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-blue-400 text-sm mr-3">1</span> Install the Application</h3>
+                <h3 className="text-xl font-semibold mb-3 flex items-center"><span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-blue-600 dark:text-blue-400 text-sm mr-3">1</span> Install the Application</h3>
                 <p className="text-muted-foreground mb-4 text-sm">Hushh Tunnel is distributed via Python's package manager. Install it easily using pip.</p>
                 <div className="bg-background p-4 rounded-lg font-mono text-sm text-muted-foreground border border-border/50 shadow-inner">
                   <span className="text-muted-foreground select-none">$ </span>pip install hushh-tunnel
@@ -128,7 +128,7 @@ export default function DocumentationPage() {
               </div>
 
               <div className="bg-card border border-border rounded-xl p-6">
-                <h3 className="text-xl font-semibold mb-3 flex items-center"><span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-blue-400 text-sm mr-3">2</span> Log in to your Account</h3>
+                <h3 className="text-xl font-semibold mb-3 flex items-center"><span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-blue-600 dark:text-blue-400 text-sm mr-3">2</span> Log in to your Account</h3>
                 <p className="text-muted-foreground mb-4 text-sm">Authenticate your device to securely link it with your account.</p>
                 <div className="bg-background p-4 rounded-lg font-mono text-sm text-muted-foreground border border-border/50 shadow-inner">
                   <span className="text-muted-foreground select-none">$ </span>hushh login
@@ -136,14 +136,14 @@ export default function DocumentationPage() {
               </div>
 
               <div className="bg-card border border-border rounded-xl p-6">
-                <h3 className="text-xl font-semibold mb-3 flex items-center"><span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-blue-400 text-sm mr-3">3</span> Expose your Local Service</h3>
+                <h3 className="text-xl font-semibold mb-3 flex items-center"><span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-blue-600 dark:text-blue-400 text-sm mr-3">3</span> Expose your Local Service</h3>
                 <p className="text-muted-foreground mb-4 text-sm">Pass the port number where your local application is running to instantly create a public URL.</p>
                 <div className="bg-background p-4 rounded-lg font-mono text-sm text-muted-foreground border border-border/50 shadow-inner">
                   <span className="text-muted-foreground select-none">$ </span>hushh http 3000
                   <br /><br />
                   <span className="text-emerald-400">✔ Connected</span><br />
                   <span className="text-muted-foreground">Forwarding:</span><br />
-                  <span className="text-blue-400">https://a8x91kp3.hushh.online</span> <span className="text-muted-foreground">→</span> http://localhost:3000
+                  <span className="text-blue-600 dark:text-blue-400">https://a8x91kp3.hushh.online</span> <span className="text-muted-foreground">→</span> http://localhost:3000
                 </div>
               </div>
             </div>
@@ -161,7 +161,7 @@ export default function DocumentationPage() {
               </Card>
               <Card className="bg-card/40 border-border/80">
                 <CardContent className="pt-6">
-                  <Activity className="w-6 h-6 text-blue-400 mb-3" />
+                  <Activity className="w-6 h-6 text-blue-600 dark:text-blue-400 mb-3" />
                   <h4 className="font-semibold text-foreground mb-2">Instant & Reliable</h4>
                   <p className="text-sm text-muted-foreground">Connections are established instantly with auto-reconnects built in to handle network drops.</p>
                 </CardContent>
@@ -217,11 +217,11 @@ export default function DocumentationPage() {
               <span className="text-muted-foreground">$ </span>hushh http 8080 --subdomain my-awesome-app
               <br /><br />
               <span className="text-emerald-400">✔ Connected</span><br />
-              <span className="text-blue-400">https://my-awesome-app.hushh.online</span> <span className="text-muted-foreground">→</span> http://localhost:8080
+              <span className="text-blue-600 dark:text-blue-400">https://my-awesome-app.hushh.online</span> <span className="text-muted-foreground">→</span> http://localhost:8080
             </div>
-            <div className="bg-blue-900/20 border border-blue-900/50 rounded-lg p-4 flex items-start">
-              <Book className="w-5 h-5 text-blue-400 mr-3 shrink-0 mt-0.5" />
-              <p className="text-sm text-blue-200 m-0">
+            <div className="bg-blue-500/10 dark:bg-blue-900/20 border border-blue-500/20 dark:border-blue-900/50 rounded-lg p-4 flex items-start">
+              <Book className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3 shrink-0 mt-0.5" />
+              <p className="text-sm text-blue-800 dark:text-blue-200 m-0">
                 <strong>Note:</strong> Standard custom subdomains are available on a first-come, first-served basis for the duration of the connection.
               </p>
             </div>
@@ -239,35 +239,35 @@ export default function DocumentationPage() {
                 </thead>
                 <tbody className="text-muted-foreground divide-y divide-slate-800/50">
                   <tr className="hover:bg-accent/30 transition">
-                    <td className="py-3 px-4 font-mono text-sm text-blue-300">hushh login</td>
+                    <td className="py-3 px-4 font-mono text-sm text-blue-600 dark:text-blue-300">hushh login</td>
                     <td className="py-3 px-4 text-sm">Sign in to your account.</td>
                   </tr>
                   <tr className="hover:bg-accent/30 transition">
-                    <td className="py-3 px-4 font-mono text-sm text-blue-300">hushh logout</td>
+                    <td className="py-3 px-4 font-mono text-sm text-blue-600 dark:text-blue-300">hushh logout</td>
                     <td className="py-3 px-4 text-sm">Sign out of your device.</td>
                   </tr>
                   <tr className="hover:bg-accent/30 transition">
-                    <td className="py-3 px-4 font-mono text-sm text-blue-300">hushh whoami</td>
+                    <td className="py-3 px-4 font-mono text-sm text-blue-600 dark:text-blue-300">hushh whoami</td>
                     <td className="py-3 px-4 text-sm">View your currently logged in account details.</td>
                   </tr>
                   <tr className="hover:bg-accent/30 transition">
-                    <td className="py-3 px-4 font-mono text-sm text-blue-300">hushh http &lt;port&gt;</td>
+                    <td className="py-3 px-4 font-mono text-sm text-blue-600 dark:text-blue-300">hushh http &lt;port&gt;</td>
                     <td className="py-3 px-4 text-sm">Expose the specified local port to the internet.</td>
                   </tr>
                   <tr className="hover:bg-accent/30 transition">
-                    <td className="py-3 px-4 font-mono text-sm text-blue-300">hushh http &lt;port&gt; --subdomain &lt;name&gt;</td>
+                    <td className="py-3 px-4 font-mono text-sm text-blue-600 dark:text-blue-300">hushh http &lt;port&gt; --subdomain &lt;name&gt;</td>
                     <td className="py-3 px-4 text-sm">Expose a port using a specific subdomain.</td>
                   </tr>
                   <tr className="hover:bg-accent/30 transition">
-                    <td className="py-3 px-4 font-mono text-sm text-blue-300">hushh status</td>
+                    <td className="py-3 px-4 font-mono text-sm text-blue-600 dark:text-blue-300">hushh status</td>
                     <td className="py-3 px-4 text-sm">View a list of all your active tunnels.</td>
                   </tr>
                   <tr className="hover:bg-accent/30 transition">
-                    <td className="py-3 px-4 font-mono text-sm text-blue-300">hushh stop &lt;subdomain&gt;</td>
+                    <td className="py-3 px-4 font-mono text-sm text-blue-600 dark:text-blue-300">hushh stop &lt;subdomain&gt;</td>
                     <td className="py-3 px-4 text-sm">Close a specific running tunnel.</td>
                   </tr>
                   <tr className="hover:bg-accent/30 transition">
-                    <td className="py-3 px-4 font-mono text-sm text-blue-300">hushh version</td>
+                    <td className="py-3 px-4 font-mono text-sm text-blue-600 dark:text-blue-300">hushh version</td>
                     <td className="py-3 px-4 text-sm">Display the current version of the application.</td>
                   </tr>
                 </tbody>
